@@ -1,0 +1,10 @@
+fastapi==0.85.0
+uvicorn==0.18.3
+PyJWT==2.6.0
+orjson==3.8.5
+python-dotenv==0.21.0
+aiokafka==0.8.0
+opentelemetry-api==1.15.0
+opentelemetry-sdk==1.15.0
+opentelemetry-instrumentation-fastapi==0.36b0
+opentelemetry-exporter-jaeger==1.15.0
