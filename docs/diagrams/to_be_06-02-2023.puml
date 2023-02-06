@@ -11,6 +11,7 @@ SHOW_PERSON_OUTLINE()
 AddElementTag("mem", $bgColor="#FFFFF0", $fontColor="black")
 AddContainerTag("db", $bgColor="#1E90F1")
 AddElementTag("new", $bgColor="Cyan", $fontColor="black")
+AddElementTag("new1", $bgColor="Yellow", $fontColor="black")
 AddElementTag("etl", $fontColor=$ELEMENT_FONT_COLOR, $bgColor="#335DA5", $shape=EightSidedShape())
 Person(User, "Пользователь", "Потребитель контента")
 Person(Manager, "Менеджер БД", "Заносит контент в БД")
@@ -41,7 +42,7 @@ System_Boundary(movies, "Movies") {
     Rel_R(User, auth_service, "Аутентификация","Получение JWT-токена")
     'Rel(auth_service, User, "Токен","JWT")
     Rel_R(User, movies_service, "Получение контента","")
-
+System_Boundary(new_service, "UGC") {
     Container(ugc_service, "UGC API", "FastAPI service", "Сервис UGC", $tags="new")
     'ContainerQueue(ugc_kafka, "Events","Kafka", $tags="mem")
     queue "<$kafka>" as ugc_kafka
@@ -51,8 +52,8 @@ System_Boundary(movies, "Movies") {
     Rel_R(ugc_kafka, ETL_events,"R")
     Rel_R(ETL_events, events_db, "W")
     Rel(User, ugc_service, "События пользователя")
-
-    Container(recommend_service, "Recommend API", "Python","Сервис рекомендаций", $tags="new")
+}
+    Container(recommend_service, "Recommend API", "Python","Сервис рекомендаций", $tags="new1")
     Lay_U(movies_service, admin_service)
     Lay_U(auth_service, movies_service)
     Lay_U(ugc_service, auth_service)
