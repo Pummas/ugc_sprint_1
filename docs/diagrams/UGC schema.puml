@@ -1,0 +1,22 @@
+@startuml to be
+!include <C4/C4_Container>
+!include <logos/kafka>
+title UGC Diagram Sprint 7 (06.02.2023)
+footer Team 7
+HIDE_STEREOTYPE()
+SHOW_PERSON_OUTLINE()
+System_Boundary(UGC, "UGC") {
+AddProperty("path", "/ugc/v1/events/movie_view")
+AddProperty("method", "POST")
+AddProperty("description", "add user event to storage")
+Container(endpoint, "Endpoint")
+Container(fastapi, "FastAPI")
+Container(loader, "Kafka Loader")
+'ContainerQueue(kafka, "Events","Kafka")
+queue "<$kafka>" as kafka
+Rel(endpoint,fastapi,"Request")
+Rel(fastapi,loader,"user event")
+Rel(loader, kafka,"W")
+
+}
+@enduml
