@@ -1,0 +1,29 @@
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    hostname: zookeeper
+    container_name: zookeeper
+    env_file:
+      - .env
+
+  broker:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: broker
+    ports:
+      - "39092:9092"
+    depends_on:
+      - zookeeper
+    env_file:
+      - .env
+
+  etl_kafka:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - ./src/:/opt/app/
+    env_file:
+      - .env
+    depends_on:
+      - broker
