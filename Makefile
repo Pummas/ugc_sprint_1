@@ -5,4 +5,4 @@ format:
 lint:
 	black --check .
 	isort --check-only .
-	flake8 src
+	flake8 .

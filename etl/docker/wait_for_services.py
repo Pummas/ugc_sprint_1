@@ -4,7 +4,7 @@ import os
 import backoff
 from confluent_kafka.admin import AdminClient
 
-KAFKA_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+KAFKA_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:39092")
 
 
 LOGGING = {

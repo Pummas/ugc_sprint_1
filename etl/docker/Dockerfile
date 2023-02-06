@@ -10,9 +10,10 @@ RUN chmod +x /opt/entrypoint.sh
 
 WORKDIR /opt/app
 
-COPY ../requirements.txt ../requirements.dev.txt ./
+COPY ./requirements.txt ./requirements.dev.txt ./
 RUN pip install -r requirements.txt -r requirements.dev.txt
-COPY ../src .
+
+COPY ./src ./
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
 CMD ["python", "main.py"]

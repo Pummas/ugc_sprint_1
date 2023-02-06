@@ -1,4 +1,4 @@
-from config import settings, consumer_config
+from config import consumer_config, settings
 from extractor import KafkaExtractor
 from pre_start import create_kafka_topics
 
@@ -6,8 +6,8 @@ from pre_start import create_kafka_topics
 def extract_events():
     # для проверки работоспособности
     extractor = KafkaExtractor(settings.TOPIC_NAMES, consumer_config)
-    for key, value in extractor.fetch():
-        print(f"Message consumed: key = {key} value = {value}")
+    for message_bytes in extractor.fetch():
+        print(f"Message consumed: value = {message_bytes}")
 
 
 if __name__ == "__main__":
