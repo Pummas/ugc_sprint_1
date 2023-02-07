@@ -4,7 +4,7 @@ from pydantic import BaseSettings, Field
 
 
 class Settings(BaseSettings):
-    KAFKA_BOOTSTRAP_SERVERS: str = "localhost:39092"
+    KAFKA_BOOTSTRAP_SERVERS: str = "localhost:39092,localhost:39093,localhost:39094"
     TOPIC_NAMES: list[str] = ["user.views"]
     GROUP_ID: str = "etl_kafka"
     AUTO_OFFSET_RESET: str = "smallest"

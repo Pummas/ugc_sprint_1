@@ -13,7 +13,7 @@ services:
     ports:
     # To learn about configuring Kafka for access across networks see
     # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
-      - "39092:9092"
+      - "39092:39092"
     depends_on:
       - zookeeper-1
     environment:
@@ -35,7 +35,7 @@ services:
     ports:
     # To learn about configuring Kafka for access across networks see
     # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
-      - "39093:9093"
+      - "39093:39093"
     depends_on:
       - zookeeper-1
     environment:
@@ -57,7 +57,7 @@ services:
     ports:
     # To learn about configuring Kafka for access across networks see
     # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
-      - "39094:9094"
+      - "39094:39094"
     depends_on:
       - zookeeper-1
     environment:
