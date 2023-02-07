@@ -1,13 +1,11 @@
-from config import admin_config
 from confluent_kafka import KafkaError, KafkaException
 from confluent_kafka.admin import AdminClient, NewTopic
 
+from config import admin_config
+
 
 def create_kafka_topics(topic_names: list[str]) -> None:
-    new_topics = [
-        NewTopic(topic_name, num_partitions=6, replication_factor=3)
-        for topic_name in topic_names
-    ]
+    new_topics = [NewTopic(topic_name, num_partitions=6, replication_factor=3) for topic_name in topic_names]
     admin_client = AdminClient(admin_config)
     futures = admin_client.create_topics(new_topics, validate_only=False)
 

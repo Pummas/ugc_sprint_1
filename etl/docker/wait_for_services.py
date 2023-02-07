@@ -35,9 +35,7 @@ def fake_send_email(details: dict):
     logger.debug("Send email")
 
 
-@backoff.on_predicate(
-    backoff.expo, logger=logger, max_time=300, on_giveup=fake_send_email, max_value=5
-)
+@backoff.on_predicate(backoff.expo, logger=logger, max_time=300, on_giveup=fake_send_email, max_value=5)
 def check_kafka(admin_client: AdminClient) -> bool:
     try:
         admin_client.list_topics()

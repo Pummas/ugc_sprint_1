@@ -3,8 +3,9 @@
 from random import randint
 from uuid import uuid4
 
-from config import producer_config, settings
 from confluent_kafka import Producer
+
+from config import producer_config, settings
 from model import UserFilmView
 
 

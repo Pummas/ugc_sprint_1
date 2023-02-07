@@ -7,10 +7,10 @@ lint:
 	isort --check-only .
 	flake8 .
 
-make run:
+run:
 	docker compose up -d --build
 
-make stop:
+stop:
 	docker compose down
 
 etl-logs:
