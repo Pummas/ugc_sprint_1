@@ -15,6 +15,7 @@ services:
       - "9000:9000"
     volumes:
       - ./data/node1:/etc/clickhouse-server
+      - ./clickhouse_db/init_one.sql:/docker-entrypoint-initdb.d/init.sql
     depends_on:
       - zookeeper
 
@@ -33,6 +34,7 @@ services:
     hostname: clickhouse-node3
     volumes:
       - ./data/node3:/etc/clickhouse-server
+      - ./clickhouse_db/init_two.sql:/docker-entrypoint-initdb.d/init.sql
     depends_on:
       - zookeeper
 
