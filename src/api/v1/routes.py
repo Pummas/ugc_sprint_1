@@ -1,5 +1,8 @@
-from src.config import app
+from fastapi import APIRouter
 
-@app.post('/load')
+router = APIRouter(prefix="/etl", tags=["etl"], responses={404: {"description": "Not found"}})
+
+
+@router.post('/load')
 def load():
-    pass
+    return "hello"
