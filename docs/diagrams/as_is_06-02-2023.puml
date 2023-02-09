@@ -1,0 +1,45 @@
+@startuml As Is
+!include <C4/C4_Container>
+!include <elastic/common>
+!include <elastic/elasticsearch/elasticsearch>
+title AS IS Diagram Sprint 7 (06.02.2023)
+HIDE_STEREOTYPE()
+SHOW_PERSON_OUTLINE()
+
+AddElementTag("mem", $bgColor="#FFFFF0", $fontColor="black")
+AddContainerTag("db", $bgColor="#1E90FF")
+AddElementTag("etl", $fontColor=$ELEMENT_FONT_COLOR, $bgColor="#335DA5", $shape=EightSidedShape())
+
+Person(User, "Пользователь", "Потребитель контента")
+Person(Manager, "Менеджер БД", "Заносит контент в БД")
+
+System_Boundary(movies, "Movies") {
+    Container(admin_service, "Admin Panel", "Django Service", "Для ввода данных по контенту в БД")
+    Rel(Manager, admin_service, "Заносит контент", "фильмы")
+    ContainerDb(movies_db, "Movies DB", "Postgres", "Movies info", $tags="db")
+    BiRel_R(admin_service, movies_db,"R/W","")
+
+    Container(auth_service, "Auth API", "Flask service", "Сервис аутентификации, выдает JWT токены")
+    ContainerDb(auth_service_db, "Auth DB", "Postgres", "Данные пользователей",$tags="db")
+    ContainerDb(auth_service_redis, "Session storage", "Redis", "Сессионные данные", $tags="mem")
+    BiRel(auth_service, auth_service_db, "R/W")
+    BiRel(auth_service, auth_service_redis, "R/W")
+
+    Container(ETL_movies, "ETL Movies", "Python", "Переносит данные из Movies DB в Elastic Movies", $tags="etl")
+    Rel(movies_db,ETL_movies,"R")
+    'ContainerDb(movies_el, "Movies", "Elastic Search", "Movies info",$tags="db")
+    ELASTICSEARCH(movies_el, "Movies info",database)
+    Rel(ETL_movies, movies_el, "W")
+
+    Container(movies_service, "Movies API", "FastAPI service", "Выдача информации по контенту")
+    Rel(movies_el, movies_service,"R")
+    ContainerDb(movies_redis, "Cache", "Redis", "Кэш данных", $tags="mem")
+    BiRel_L(movies_redis, movies_service, "R/W")
+
+    Rel(User, auth_service, "Аутентификация","Получение JWT-токена")
+    Rel(auth_service, User, "Токен","JWT")
+    Rel(User, movies_service, "Получение контента","")
+    Lay_U(movies_service, admin_service)
+    Lay_U(auth_service, movies_service)
+}
+@enduml
