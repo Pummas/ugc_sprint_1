@@ -79,15 +79,3 @@ services:
     ports:
       - "${JAEGER_PORT}:6831/udp"
       - "${JAEGER_UI_PORT}:16686"
-
-
-#  etl_kafka:
-#    build:
-#      context: ./etl
-#      dockerfile: ./docker/Dockerfile
-#    volumes:
-#      - ./etl/src/:/opt/app/
-#    env_file:
-#      - .env
-#    depends_on:
-#      - broker-1
