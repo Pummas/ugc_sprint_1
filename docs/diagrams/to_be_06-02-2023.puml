@@ -1,0 +1,66 @@
+@startuml to be
+!include <C4/C4_Container>
+!include <logos/kafka>
+!include <elastic/common>
+!include <elastic/elasticsearch/elasticsearch>
+title TO BE Diagram Sprint 7 (06.02.2023)
+footer Team 7
+HIDE_STEREOTYPE()
+SHOW_PERSON_OUTLINE()
+
+AddElementTag("mem", $bgColor="#FFFFF0", $fontColor="black")
+AddContainerTag("db", $bgColor="#1E90F1")
+AddElementTag("new", $bgColor="Cyan", $fontColor="black")
+AddElementTag("new1", $bgColor="Yellow", $fontColor="black")
+AddElementTag("etl", $fontColor=$ELEMENT_FONT_COLOR, $bgColor="#335DA5", $shape=EightSidedShape())
+Person(User, "Пользователь", "Потребитель контента")
+Person(Manager, "Менеджер БД", "Заносит контент в БД")
+
+System_Boundary(movies, "Movies") {
+    Container(admin_service, "Admin Panel", "Django Service", "Для ввода данных по контенту в БД")
+    Rel_R(Manager, admin_service, "Заносит контент", "фильмы")
+    ContainerDb(movies_db, "Movies DB", "Postgres", "Movies info", $tags="db")
+    BiRel_D(admin_service, movies_db,"R/W","")
+
+    Container(auth_service, "Auth API", "Flask service", "Сервис аутентификации, выдает JWT токены")
+    ContainerDb(auth_service_db, "Auth DB", "Postgres", "Данные пользователей",$tags="db")
+    ContainerDb(auth_service_redis, "Session storage", "Redis", "Сессионные данные", $tags="mem")
+    BiRel_R(auth_service, auth_service_db, "R/W")
+    BiRel_R(auth_service, auth_service_redis, "R/W")
+
+    Container(ETL_movies, "ETL Movies", "Python", "Переносит данные из Movies DB в Elastic Movies", $tags="etl")
+    Rel_R(movies_db,ETL_movies,"R")
+    'ContainerDb(movies_el, "Movies EL", "Elastic Search", "Movies info",$tags="db")
+    ELASTICSEARCH(movies_el, "Movies info",database)
+    Rel_R(ETL_movies, movies_el, "W")
+
+    Container(movies_service, "Movies API", "FastAPI service", "Выдача информации по контенту")
+    Rel(movies_el, movies_service,"R")
+    ContainerDb(movies_redis, "Cache", "Redis", "Кэш данных", $tags="mem")
+    BiRel_L(movies_redis, movies_service, "R/W")
+
+    Rel_R(User, auth_service, "Аутентификация","Получение JWT-токена")
+    'Rel(auth_service, User, "Токен","JWT")
+    Rel_R(User, movies_service, "Получение контента","")
+System_Boundary(new_service, "UGC") {
+    Container(ugc_service, "UGC API", "FastAPI service", "Сервис UGC", $tags="new")
+    'ContainerQueue(ugc_kafka, "Events","Kafka", $tags="mem")
+    queue "<$kafka>" as ugc_kafka
+    ContainerDb(events_db, "Events DB", "ClickHouse","Хранилище событий", $tags="db")
+    Rel(ugc_service, ugc_kafka,"W")
+    Container(ETL_events, "ETL Events","Python","Переносит данные из Kafka в ClickHouse", $tags="etl")
+    Rel_R(ugc_kafka, ETL_events,"R")
+    Rel_R(ETL_events, events_db, "W")
+    Rel(User, ugc_service, "События пользователя")
+}
+    Container(recommend_service, "Recommend API", "Python","Сервис рекомендаций", $tags="new1")
+    Lay_U(movies_service, admin_service)
+    Lay_U(auth_service, movies_service)
+    Lay_U(ugc_service, auth_service)
+    'Lay_U(ugc_service, auth_db)
+    Lay_U(recommend_service, events_db)
+    Lay_L(recommend_service,ugc_kafka)
+    Rel_L(events_db, recommend_service,"R")
+    Rel(User, recommend_service,"Запрос рекомендаций")
+}
+@enduml
