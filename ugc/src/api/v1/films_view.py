@@ -3,10 +3,10 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Response
 
-from src.api.deps import get_film_storage, get_token  # get_mock_token - for test
+from src.api.deps import get_film_storage, get_token # get_mock_token# - for test
 from src.core.auth_bearer import AccessTokenPayload
 from src.core.core_model import CoreModel
-from src.core.storage_service import StorageService
+from src.db.film_view_storage import FilmViewStorage
 from src.models.dto import DTOViewEvent
 
 
@@ -28,7 +28,7 @@ router = APIRouter()
 async def add_movie_view(
     film_id: UUID,
     event: ViewEvent,
-    storage: StorageService = Depends(get_film_storage),
+    storage: FilmViewStorage = Depends(get_film_storage),
     token_payload: AccessTokenPayload = Depends(get_token),  # get_mock_token - for test
 ):
     """
