@@ -37,7 +37,10 @@ async def try_to_start_kafka(kafka: AIOKafkaProducer):
 
 async def init_kafka() -> bool:
     global producer
-    kafka = AIOKafkaProducer(client_id=settings.PROJECT_NAME, bootstrap_servers=settings.KAFKA_INSTANCE)
+    kafka = AIOKafkaProducer(client_id=settings.PROJECT_NAME,
+                             bootstrap_servers=settings.KAFKA_INSTANCE,
+                             request_timeout_ms=1000  # ждем примерно 1сек (может до 2*1сек)
+                             )
     try:
         await try_to_start_kafka(kafka)
     except KafkaError as err:
