@@ -11,8 +11,6 @@ services:
     image: confluentinc/cp-kafka:7.3.0
     container_name: broker-1
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "39092:39092"
     depends_on:
       - zookeeper-1
@@ -33,8 +31,6 @@ services:
     image: confluentinc/cp-kafka:7.3.0
     container_name: broker-2
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "39093:39093"
     depends_on:
       - zookeeper-1
@@ -55,8 +51,6 @@ services:
     image: confluentinc/cp-kafka:7.3.0
     container_name: broker-3
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "39094:39094"
     depends_on:
       - zookeeper-1
@@ -84,11 +78,6 @@ services:
     depends_on:
       - broker-1
 
-  zookeeper:
-    image: zookeeper:3.5
-    container_name: zookeeper
-    hostname: zookeeper
-
   clickhouse-node1:
     image: yandex/clickhouse-server:20.4
     container_name: clickhouse-node1
@@ -100,7 +89,7 @@ services:
       - ./etl/data/node1:/etc/clickhouse-server
       - ./etl/clickhouse_db/init_one.sql:/docker-entrypoint-initdb.d/init.sql
     depends_on:
-      - zookeeper
+      - zookeeper-1
 
   clickhouse-node2:
     image: yandex/clickhouse-server:20.4
@@ -109,7 +98,7 @@ services:
     volumes:
       - ./etl/data/node2:/etc/clickhouse-server
     depends_on:
-      - zookeeper
+      - zookeeper-1
 
   clickhouse-node3:
     image: yandex/clickhouse-server:20.4
@@ -119,7 +108,7 @@ services:
       - ./etl/data/node3:/etc/clickhouse-server
       - ./etl/clickhouse_db/init_two.sql:/docker-entrypoint-initdb.d/init.sql
     depends_on:
-      - zookeeper
+      - zookeeper-1
 
   clickhouse-node4:
     image: yandex/clickhouse-server:20.4
@@ -128,4 +117,4 @@ services:
     volumes:
       - ./etl/data/node4:/etc/clickhouse-server
     depends_on:
-      - zookeeper
+      - zookeeper-1

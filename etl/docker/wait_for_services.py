@@ -2,9 +2,11 @@ import logging.config
 import os
 
 import backoff
+from clickhouse_driver import Client
 from confluent_kafka.admin import AdminClient
 
 KAFKA_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:39092")
+CLICKHOUSE_HOST = os.getenv("CLICKHOUSE_HOST", "localhost")
 
 
 LOGGING = {
@@ -36,6 +38,15 @@ def fake_send_email(details: dict):
 
 
 @backoff.on_predicate(backoff.expo, logger=logger, max_time=300, on_giveup=fake_send_email, max_value=5)
+def check_clickhouse(clickhouse_client: Client) -> bool:
+    try:
+        clickhouse_client.execute("SHOW DATABASES")
+        return True
+    except Exception:
+        return False
+
+
+@backoff.on_predicate(backoff.expo, logger=logger, max_time=300, on_giveup=fake_send_email, max_value=5)
 def check_kafka(admin_client: AdminClient) -> bool:
     try:
         admin_client.list_topics()
@@ -45,9 +56,14 @@ def check_kafka(admin_client: AdminClient) -> bool:
 
 
 def wait():
-    client = AdminClient({"bootstrap.servers": KAFKA_SERVERS})
+    clickhouse_client = Client(host=CLICKHOUSE_HOST)
+    logger.info("Waiting for Clickhouse")
+    check_clickhouse(clickhouse_client)
+    logger.info("Clickhouse is up")
+
+    kafka_client = AdminClient({"bootstrap.servers": KAFKA_SERVERS})
     logger.info("Waiting for Kafka")
-    check_kafka(client)
+    check_kafka(kafka_client)
     logger.info("Kafka is up")
 
 

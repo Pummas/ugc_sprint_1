@@ -1,28 +1,34 @@
 from abc import abstractmethod
-from contextlib import closing
-from typing import Iterator
+from typing import Any, Iterator
 
-from confluent_kafka import Consumer
+from confluent_kafka import Consumer, Message
 
 
-class Extractor:
+class MessageBroker:
     @abstractmethod
-    def fetch(self) -> Iterator[bytes]:
+    def extract(self, max_records: int) -> Iterator[Any]:
+        pass
+
+    @abstractmethod
+    def update_offsets(self, offsets: dict[Any, Any]) -> None:
         pass
 
 
-class KafkaExtractor(Extractor):
-    def __init__(self, topics: list[str], config):
-        self.consumer = Consumer(config)
-        self.consumer.subscribe(topics)
+class KafkaBroker(MessageBroker):
+    def __init__(self, consumer: Consumer):
+        self.consumer = consumer
 
-    def fetch(self) -> Iterator[bytes]:
-        with closing(self.consumer) as consumer:
-            while True:
-                msg = consumer.poll(1.0)
-                if msg is None:
-                    continue
-                elif msg.error():
-                    print(f"ERROR: {msg.error()}")
-                else:
-                    yield msg.value()
+    def extract(self, max_records: int) -> Iterator[Message]:
+        for _ in range(max_records):
+            msg = self.consumer.poll(1.0)
+            if msg is None:
+                print("Waiting")
+                return
+            elif msg.error():
+                print(f"ERROR: {msg.error()}")
+                return
+            else:
+                yield msg
+
+    def update_offsets(self, offsets: dict[Any, Any]) -> None:
+        pass
