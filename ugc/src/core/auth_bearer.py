@@ -68,7 +68,7 @@ def get_mock_token():
         exp=1675085306,
         name="mock_user",
         roles=["MOCK_USER"],
-        device_id="Mock device"
+        device_id="Mock device",
     )
 
 

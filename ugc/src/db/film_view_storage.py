@@ -17,4 +17,3 @@ class FilmViewStorage(StorageService):
 # для инъекции зависимостей в FastAPI
 def get_film_storage() -> FilmViewStorage:
     return FilmViewStorage()
-

@@ -1,7 +1,9 @@
 import json
 import uuid
 from http import HTTPStatus
+
 from src.core import auth_bearer
+
 from .constants import USER_ID
 
 FILM_ID = uuid.UUID("4eae4ede-a04c-47d0-bae5-12d5a3433b1f")
@@ -59,7 +61,7 @@ def test_ugc_invalid_token(client, kafka_mock_producer):
     pos_end = 10
     payload = {"pos_start": pos_start, "pos_end": pos_end}
 
-    #убираем мок и вкючаем проверку токена
+    # убираем мок и вкючаем проверку токена
     auth_bearer.MOCK_TOKEN = False
     client.app.dependency_overrides = {}
 

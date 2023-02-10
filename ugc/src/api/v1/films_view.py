@@ -25,10 +25,10 @@ router = APIRouter()
     status_code=HTTPStatus.NO_CONTENT,
 )
 async def add_movie_view(
-        film_id: UUID,
-        event: ViewEvent,
-        storage: FilmViewStorage = Depends(get_film_storage),
-        token_payload: AccessTokenPayload = Depends(jwt_bearer)
+    film_id: UUID,
+    event: ViewEvent,
+    storage: FilmViewStorage = Depends(get_film_storage),
+    token_payload: AccessTokenPayload = Depends(jwt_bearer),
 ) -> Response:
     """
     Add movies_view event to storage. Must be called with JWT access token
