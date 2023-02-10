@@ -67,7 +67,7 @@ LOGGING = {
             "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
-        }
+        },
     },
     "root": {
         "level": LOG_LEVEL,
