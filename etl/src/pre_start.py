@@ -1,7 +1,12 @@
+import logging
+
 from confluent_kafka import KafkaError, KafkaException
 from confluent_kafka.admin import AdminClient, NewTopic
 
 from config import admin_config
+
+
+logger = logging.getLogger(__name__)
 
 
 def create_kafka_topics(topic_names: list[str]) -> None:
@@ -12,10 +17,10 @@ def create_kafka_topics(topic_names: list[str]) -> None:
     for topic, future in futures.items():
         try:
             future.result()  # The result itself is None
-            print(f"Topic {topic} created")
+            logger.info("Topic %s created", topic)
         except KafkaException as err:
             if err.args[0].code() == KafkaError.TOPIC_ALREADY_EXISTS:
-                print(f"Topic {topic} already exist")
+                logger.info("Topic %s already exist", topic)
             else:
-                print(f"Failed to create topic {topic}: {err}")
+                logger.exception("Failed to create topic %s", topic)
                 raise

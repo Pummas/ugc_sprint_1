@@ -1,8 +1,6 @@
 from abc import abstractmethod
 from typing import Any, Iterator
 
-from confluent_kafka import Message
-
 from model import ViewedFilm
 
 

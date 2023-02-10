@@ -1,11 +1,10 @@
+from config import settings
 from extractor import MessageBroker
 from loader import Database
 from storage import Storage
 from transformer import Transformer
 
-QUERY = (
-    "INSERT INTO default.viewed_films (user_id, film_id, film_start_seconds, film_stop_seconds, created_at) VALUES"
-)
+QUERY = "INSERT INTO default.viewed_films (user_id, film_id, film_start_seconds, film_stop_seconds, created_at) VALUES"
 
 
 class ETL:
@@ -18,7 +17,7 @@ class ETL:
 
     def run(self):
         while True:
-            data = self.extractor.extract(max_records=1000)
+            data = self.extractor.extract(max_records=settings.MAX_BATCH_SIZE)
             transformed_data = self.transformer.transform(data)
             if transformed_data:
                 self.loader.load(QUERY, transformed_data)

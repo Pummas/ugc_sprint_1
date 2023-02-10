@@ -1,6 +1,7 @@
 import clickhouse_driver
 import confluent_kafka
 
+import logging_config  # noqa
 from config import consumer_config, settings
 from etl import ETL
 from extractor import KafkaBroker
