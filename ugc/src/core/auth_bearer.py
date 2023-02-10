@@ -12,6 +12,7 @@ from src.core.core_model import CoreModel
 logger = logging.getLogger(__name__)
 
 JWT_SECRET = settings.JWT_SECRET_KEY
+MOCK_TOKEN = settings.MOCK_AUTH_TOKEN
 JWT_ALGORITHM = "HS256"
 
 
@@ -35,6 +36,9 @@ class JWTBearer(HTTPBearer):
         super().__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request) -> AccessTokenPayload:
+        if MOCK_TOKEN:
+            return get_mock_token()
+
         credentials: HTTPAuthorizationCredentials = await super().__call__(request)
         if not credentials:
             raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Invalid authorization code.")
@@ -50,6 +54,22 @@ class JWTBearer(HTTPBearer):
         logger.debug(f"jwt-token payload: {decoded_token}")
         token = AccessTokenPayload(**decoded_token)
         return token
+
+
+def get_mock_token():
+    """test only token. For run without real token"""
+    return AccessTokenPayload(
+        fresh=False,
+        iat=1675081706,
+        jti="00000000-0000-0000-0000-000000000000",
+        type="access",
+        sub="00000000-0000-0000-0000-000000000000",
+        nbf=1675081706,
+        exp=1675085306,
+        name="mock_user",
+        roles=["MOCK_USER"],
+        device_id="Mock device"
+    )
 
 
 jwt_bearer = JWTBearer()
