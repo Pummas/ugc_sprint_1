@@ -1,7 +1,7 @@
 import uvicorn
-from src.api.v1 import routes
+from ugc.src.api.v1 import routes
 
-from src.config import app
+from ugc.src.config import app
 
 app.include_router(routes.router)
 
