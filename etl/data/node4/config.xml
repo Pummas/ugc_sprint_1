@@ -65,7 +65,7 @@
 
     <zookeeper>
         <node index="1">
-            <host>zookeeper-1</host>
+            <host>zookeeper</host>
             <port>2181</port>
         </node>
     </zookeeper>
