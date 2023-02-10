@@ -71,6 +71,7 @@ services:
     build:
       context: ./etl
       dockerfile: ./docker/Dockerfile
+    container_name: etl_kafka
     volumes:
       - ./etl/src/:/opt/app/
     env_file:
