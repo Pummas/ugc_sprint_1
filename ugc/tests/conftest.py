@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-from src.api.deps import get_token
-from src.core.auth_bearer import AccessTokenPayload
+
+from src.core.auth_bearer import AccessTokenPayload, jwt_bearer
 from src.db import film_view_storage
 from src.ugc import app
 
@@ -47,7 +47,7 @@ def kafka_mock_producer():
 
 @pytest.fixture(scope="module")
 def client(kafka_mock_producer):
-    app.dependency_overrides[get_token] = get_mock_token
+    app.dependency_overrides[jwt_bearer] = get_mock_token
     test_client = TestClient(app)
     film_view_storage.write_event = kafka_mock_producer.write_event
     return test_client
