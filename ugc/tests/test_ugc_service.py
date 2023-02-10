@@ -2,7 +2,7 @@ import json
 import uuid
 from http import HTTPStatus
 
-from src.core import auth_bearer
+from core import auth_bearer
 
 from .constants import USER_ID
 

@@ -1,19 +1,13 @@
-import sys
 import uuid
-from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
-BASE_DIR = Path(__file__).parent.parent
-src_path = BASE_DIR
-if src_path not in sys.path:
-    sys.path.insert(1, str(src_path))
-
-from src.core.auth_bearer import AccessTokenPayload, jwt_bearer
-from src.db import film_view_storage
-from src.ugc import app
+import tests.source_root
 from .constants import USER_ID
+from core.auth_bearer import AccessTokenPayload, jwt_bearer
+from db import film_view_storage
+from ugc import app
 
 
 def get_mock_token():
