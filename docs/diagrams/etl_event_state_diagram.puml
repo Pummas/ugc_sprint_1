@@ -1,0 +1,24 @@
+@startuml to be
+!include <C4/C4_Container>
+title ETL State Diagram Sprint 7 (06.02.2023)
+footer Team 7
+== Init==
+ETL<-Storage: Kafka Offset
+Kafka->ETL: Cобытия от Offset
+ETL->ClickHouse: Пачка событий
+ETL->Storage: Kafka Offset
+== Timeslot==
+'Activate ETL
+ETL->ETL: 1сек*
+Kafka->ETL: Cобытия за 1 сек*
+ETL->ClickHouse: Пачка событий за 1сек*
+ETL->Storage: Kafka Offset
+'Deactivate ETL
+== Timeslot==
+ETL->ETL: 1сек*
+Kafka->ETL: Cобытия за 1 сек*
+ETL->ClickHouse: Пачка событий за 1сек*
+ETL->Storage: Kafka Offset
+== Timeslot==
+
+@enduml
