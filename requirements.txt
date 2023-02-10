@@ -1,3 +1,5 @@
+backoff==2.2.1
+confluent-kafka==2.0.2
+pydantic==1.10.4
 clickhouse-driver==0.2.5
 fastapi==0.85.0
-uvicorn==0.18.3
