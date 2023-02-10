@@ -3,10 +3,9 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Response
 
-from src.api.deps import get_film_storage, get_token # get_mock_token# - for test
-from src.core.auth_bearer import AccessTokenPayload
+from src.core.auth_bearer import AccessTokenPayload, jwt_bearer
 from src.core.core_model import CoreModel
-from src.db.film_view_storage import FilmViewStorage
+from src.db.film_view_storage import FilmViewStorage, get_film_storage
 from src.models.dto import DTOViewEvent
 
 
@@ -26,11 +25,11 @@ router = APIRouter()
     status_code=HTTPStatus.NO_CONTENT,
 )
 async def add_movie_view(
-    film_id: UUID,
-    event: ViewEvent,
-    storage: FilmViewStorage = Depends(get_film_storage),
-    token_payload: AccessTokenPayload = Depends(get_token),  # get_mock_token - for test
-):
+        film_id: UUID,
+        event: ViewEvent,
+        storage: FilmViewStorage = Depends(get_film_storage),
+        token_payload: AccessTokenPayload = Depends(jwt_bearer)
+) -> Response:
     """
     Add movies_view event to storage. Must be called with JWT access token
      - **film_id**: Film ID (uuid)
