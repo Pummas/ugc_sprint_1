@@ -54,13 +54,20 @@ LOGGING = {
             "level": LOG_LEVEL,
         },
         "uvicorn.error": {
+            "handlers": ["console"],
             "level": "INFO",
+            "propagate": False,
         },
         "uvicorn.access": {
             "handlers": ["access"],
             "level": "INFO",
             "propagate": False,
         },
+        "backoff": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        }
     },
     "root": {
         "level": LOG_LEVEL,

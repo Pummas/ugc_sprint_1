@@ -20,7 +20,9 @@ app = FastAPI(
 @app.on_event("startup")
 async def startup_event():
     logging.debug("app startup")
-    await kafka_producer.init_kafka()
+    kafka_is_connected = await kafka_producer.init_kafka()
+    if not kafka_is_connected:
+        raise SystemExit("can't connect to kafka brokers")
     init_tracer(app)
 
 
