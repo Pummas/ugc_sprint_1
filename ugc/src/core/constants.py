@@ -1,1 +1,1 @@
-VIEW_TOPIC = "user.views"
+FILM_VIEW_TOPIC = "user.views"
