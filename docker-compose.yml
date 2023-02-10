@@ -11,8 +11,6 @@ services:
     image: confluentinc/cp-kafka:7.3.0
     container_name: broker-1
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "39092:39092"
     depends_on:
       - zookeeper-1
@@ -33,8 +31,6 @@ services:
     image: confluentinc/cp-kafka:7.3.0
     container_name: broker-2
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "39093:39093"
     depends_on:
       - zookeeper-1
@@ -55,8 +51,6 @@ services:
     image: confluentinc/cp-kafka:7.3.0
     container_name: broker-3
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "39094:39094"
     depends_on:
       - zookeeper-1
@@ -153,3 +147,4 @@ services:
     depends_on:
         - broker-1
         - broker-2
+        - broker-3
