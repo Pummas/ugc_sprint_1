@@ -3,7 +3,8 @@ import logging.config as logging_config
 
 from src.core.config import settings
 
-LOG_FILE = "log.txt"
+# you can easy enable log file
+LOG_FILE = "/dev/null"
 
 if settings.DEBUG:
     LOG_FORMAT = "%(asctime)s - [%(levelname)s] - %(name)s - %(message)s -- (%(filename)s).%(funcName)s(%(lineno)d)"
@@ -13,11 +14,6 @@ else:
     LOG_LEVEL = logging.INFO
 
 LOG_DEFAULT_HANDLERS = ["console", "file"]
-
-# В логгере настраивается логгирование uvicorn-сервера.
-# Про логирование в Python можно прочитать в документации
-# https://docs.python.org/3/howto/logging.html
-# https://docs.python.org/3/howto/logging-cookbook.html
 
 LOGGING = {
     "version": 1,
