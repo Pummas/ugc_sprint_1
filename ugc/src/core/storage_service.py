@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-from src.core.core_model import CoreModel
-from src.core.meta_singleton import MetaSingleton
+from core.core_model import CoreModel
+from core.meta_singleton import MetaSingleton
 
 
 class StorageService(metaclass=MetaSingleton):

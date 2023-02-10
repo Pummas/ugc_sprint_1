@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.core.core_model import CoreModel
+from core.core_model import CoreModel
 
 
 class DTOViewEvent(CoreModel):

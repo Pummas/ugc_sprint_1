@@ -1,9 +1,9 @@
 import logging
 
-from src.core.constants import FILM_VIEW_TOPIC
-from src.core.storage_service import StorageService
-from src.db.kafka_producer import write_event
-from src.models.dto import DTOViewEvent
+from core.constants import FILM_VIEW_TOPIC
+from core.storage_service import StorageService
+from db.kafka_producer import write_event
+from models.dto import DTOViewEvent
 
 
 class FilmViewStorage(StorageService):

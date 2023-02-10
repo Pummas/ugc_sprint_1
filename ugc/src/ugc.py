@@ -3,10 +3,10 @@ import logging
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
-from src.api.v1 import films_view
-from src.core.config import settings
-from src.core.tracer import init_tracer
-from src.db import kafka_producer
+from api.v1 import films_view
+from core.config import settings
+from core.tracer import init_tracer
+from db import kafka_producer
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

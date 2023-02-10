@@ -1,7 +1,7 @@
 import logging
 import logging.config as logging_config
 
-from src.core.config import settings
+from core.config import settings
 
 # you can easy enable log file
 LOG_FILE = "/dev/null"

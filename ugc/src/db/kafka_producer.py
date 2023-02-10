@@ -5,7 +5,7 @@ from aiokafka import AIOKafkaProducer
 from aiokafka.errors import KafkaError, KafkaTimeoutError
 from fastapi import HTTPException
 
-from src.core.config import settings
+from core.config import settings
 
 producer: AIOKafkaProducer | None = None
 

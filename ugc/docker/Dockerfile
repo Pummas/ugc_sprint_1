@@ -32,7 +32,7 @@ WORKDIR /opt/app
 COPY ./src .
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]
 
 # 'production' образ
 FROM python-base as production
@@ -44,8 +44,6 @@ ENV PATH="/opt/venv/bin:${PATH}"
 COPY ./docker/entrypoint.sh ./docker/wait_for_services.py /opt/
 RUN chmod +x /opt/entrypoint.sh
 
-RUN mkdir -p /opt/app/var/log
-
 WORKDIR /opt/app
 COPY ./src .
 
@@ -54,4 +52,4 @@ RUN groupadd -r app && useradd -d /opt/app -r -g app app \
 USER app
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
-CMD ["gunicorn", "main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8001"]

@@ -6,8 +6,8 @@ import jwt
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from src.core.config import settings
-from src.core.core_model import CoreModel
+from core.config import settings
+from core.core_model import CoreModel
 
 logger = logging.getLogger(__name__)
 

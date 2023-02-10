@@ -3,10 +3,10 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Response
 
-from src.core.auth_bearer import AccessTokenPayload, jwt_bearer
-from src.core.core_model import CoreModel
-from src.db.film_view_storage import FilmViewStorage, get_film_storage
-from src.models.dto import DTOViewEvent
+from core.auth_bearer import AccessTokenPayload, jwt_bearer
+from core.core_model import CoreModel
+from db.film_view_storage import FilmViewStorage, get_film_storage
+from models.dto import DTOViewEvent
 
 
 class ViewEvent(CoreModel):
