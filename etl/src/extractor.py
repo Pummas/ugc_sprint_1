@@ -5,6 +5,8 @@ from confluent_kafka import Consumer, Message
 
 
 class MessageBroker:
+    def __init__(self):
+        self.last_offsets = {}
     @abstractmethod
     def extract(self, max_records: int) -> Iterator[Any]:
         pass
@@ -16,9 +18,11 @@ class MessageBroker:
 
 class KafkaBroker(MessageBroker):
     def __init__(self, consumer: Consumer):
+        super().__init__()
         self.consumer = consumer
 
-    def extract(self, max_records: int) -> Iterator[Message]:
+    def extract(self, max_records: int) -> Iterator[bytes]:
+        self.last_offsets = {}
         for _ in range(max_records):
             msg = self.consumer.poll(1.0)
             if msg is None:
@@ -28,7 +32,8 @@ class KafkaBroker(MessageBroker):
                 print(f"ERROR: {msg.error()}")
                 return
             else:
-                yield msg
+                self.last_offsets[(msg.topic(), msg.partition())] = msg.offset()
+                yield msg.value()
 
     def update_offsets(self, offsets: dict[Any, Any]) -> None:
         pass

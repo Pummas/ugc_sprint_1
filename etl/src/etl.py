@@ -7,6 +7,7 @@ QUERY = (
     "INSERT INTO default.viewed_films (user_id, film_id, film_start_seconds, film_stop_seconds, created_at) VALUES"
 )
 
+
 class ETL:
     def __init__(self, extractor: MessageBroker, transformer: Transformer, loader: Database, storage: Storage):
         self.extractor = extractor
@@ -19,5 +20,6 @@ class ETL:
         while True:
             data = self.extractor.extract(max_records=1000)
             transformed_data = self.transformer.transform(data)
-            self.loader.load(QUERY, transformed_data)
-            self.storage.save_offsets(self.transformer.last_offsets)
+            if transformed_data:
+                self.loader.load(QUERY, transformed_data)
+                self.storage.save_offsets(self.extractor.last_offsets)
