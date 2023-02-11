@@ -1,0 +1,12 @@
+version: '3.5'
+
+services:
+  vertica:
+    image: jbfavre/vertica:latest
+    container_name: vertica
+    hostname: vertica
+    restart: always
+    ports:
+      - "5433:5433"
+    volumes:
+      - .:/vertica

@@ -1,0 +1,4 @@
+Query_name: select_count, Average_exec_time: 0.0034317708015441893
+Query_name: select_max_timestamp_by_user_movie, Average_exec_time: 0.14352055072784423
+Query_name: select_max_timestamps_by_user, Average_exec_time: 0.14173938751220702
+Query_name: select_movies_by_user, Average_exec_time: 0.11394890069961548

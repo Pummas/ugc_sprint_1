@@ -15,7 +15,10 @@ USER_NUMBER = 10000
 MOVIES_NUMBER = 10000
 BATCH_NUMBER = 10000
 
-QUERY = """INSERT INTO default.test (id, user_id, movie_id, timestamp, event_time) VALUES"""
+QUERY = """INSERT INTO test.views (id, user_id, movie_id, timestamp, event_time) VALUES"""
+
+user_ids = [str(uuid4()) for _ in range(USER_NUMBER)]
+movie_ids = [str(uuid4()) for _ in range(MOVIES_NUMBER)]
 
 
 def generate_and_load_data():
@@ -23,8 +26,8 @@ def generate_and_load_data():
         values = [
             {
                 "id": random.randint(0, 100000),
-                "user_id": str(uuid4()),
-                "movie_id": str(uuid4()),
+                "user_id": random.choice(user_ids),
+                "movie_id": random.choice(movie_ids),
                 "timestamp": random.randint(0, 100000),
                 "event_time": datetime.now(),
             }
