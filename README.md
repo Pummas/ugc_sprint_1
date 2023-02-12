@@ -2,10 +2,10 @@
 
 
 Над проектом работали:
-https://github.com/s-morichev
-https://github.com/RomanBorovskiy
-https://github.com/valerycode
-https://github.com/Pummas
+- https://github.com/s-morichev
+- https://github.com/RomanBorovskiy
+- https://github.com/valerycode
+- https://github.com/Pummas
 
 Команды
 -`make format` отформатировать код
