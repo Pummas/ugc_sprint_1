@@ -11,7 +11,7 @@ RUN chmod +x /opt/entrypoint.sh
 WORKDIR /opt/app
 
 COPY ./requirements.txt ./requirements.dev.txt ./
-RUN pip install -r requirements.txt -r requirements.dev.txt
+RUN pip install --no-cache-dir -r requirements.txt -r requirements.dev.txt
 
 COPY ./src ./
 
