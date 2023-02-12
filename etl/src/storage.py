@@ -19,7 +19,7 @@ class KafkaStorage(Storage):
 
     def save_offsets(self, offsets: dict[tuple[str, int], int]):
         topic_partitions = [
-            TopicPartition(topic=key[0], partition=key[1], offset=value) for key, value in offsets.items()
+            TopicPartition(topic=key[0], partition=key[1], offset=value + 1) for key, value in offsets.items()
         ]
         self.consumer.store_offsets(offsets=topic_partitions)
 
