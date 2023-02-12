@@ -1,7 +1,12 @@
+import logging
 from abc import abstractmethod
 from typing import Any, Iterator
 
+from pydantic import ValidationError
+
 from model import ViewedFilm
+
+logger = logging.getLogger(__name__)
 
 
 class Transformer:
@@ -12,4 +17,11 @@ class Transformer:
 
 class KafkaTransformer(Transformer):
     def transform(self, data: Iterator[bytes]) -> list[ViewedFilm]:
-        return [ViewedFilm.parse_raw(record) for record in data]
+        result = []
+        for record in data:
+            try:
+                result.append(ViewedFilm.parse_raw(record))
+            except ValidationError:
+                logger.error("Error on creating model ViewedFilm from message %s", record)
+                continue
+        return result
