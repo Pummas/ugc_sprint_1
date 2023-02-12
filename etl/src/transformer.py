@@ -23,5 +23,5 @@ class KafkaTransformer(Transformer):
                 result.append(ViewedFilm.parse_raw(record))
             except ValidationError:
                 logger.error("Error on creating model ViewedFilm from message %s", record)
-                continue
+
         return result

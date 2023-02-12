@@ -5,7 +5,6 @@ from confluent_kafka.admin import AdminClient, NewTopic
 
 from config import admin_config
 
-
 logger = logging.getLogger(__name__)
 
 
