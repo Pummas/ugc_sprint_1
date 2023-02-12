@@ -1,10 +1,10 @@
 ### Спринт 8
 
-участники:  
-* Михаил Лукин (Тимлид)
-* Валерия Малышева
-* Роман Боровский
-* Сергей Моричев
+Над проектом работали:  
+* Михаил Лукин (Тимлид) https://github.com/Pummas
+* Валерия Малышева https://github.com/valerycode
+* Роман Боровский https://github.com/RomanBorovskiy
+* Сергей Моричев https://github.com/s-morichev
 
 ### Состав проекта
 
@@ -12,8 +12,8 @@
 /etl - ETL сервис
 
 Команды
--`make format` отформатировать код
--`make lint` запустить линтер (flake8)
--`make run` запустить сервисы
--`make stop` остановить сервисы
--`make etl-logs` посмотреть логи etl
+- `make format` отформатировать код
+- `make lint` запустить линтер (flake8)
+- `make run` запустить сервисы
+- `make stop` остановить сервисы
+- `make etl-logs` посмотреть логи etl

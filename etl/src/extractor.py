@@ -1,28 +1,46 @@
+import logging
 from abc import abstractmethod
-from contextlib import closing
-from typing import Iterator
+from typing import Any, Iterator
 
 from confluent_kafka import Consumer
 
+logger = logging.getLogger(__name__)
 
-class Extractor:
+
+class MessageBroker:
+    def __init__(self):
+        self.last_offsets = {}
+
     @abstractmethod
-    def fetch(self) -> Iterator[bytes]:
+    def extract(self, max_records: int) -> Iterator[Any]:
+        pass
+
+    @abstractmethod
+    def update_offsets(self, offsets: dict[Any, Any]) -> None:
         pass
 
 
-class KafkaExtractor(Extractor):
-    def __init__(self, topics: list[str], config):
-        self.consumer = Consumer(config)
-        self.consumer.subscribe(topics)
+class KafkaBroker(MessageBroker):
+    def __init__(self, consumer: Consumer):
+        super().__init__()
+        self.consumer = consumer
 
-    def fetch(self) -> Iterator[bytes]:
-        with closing(self.consumer) as consumer:
-            while True:
-                msg = consumer.poll(1.0)
-                if msg is None:
-                    continue
-                elif msg.error():
-                    print(f"ERROR: {msg.error()}")
-                else:
-                    yield msg.value()
+    def extract(self, max_records: int) -> Iterator[bytes]:
+        self.last_offsets = {}
+        for _ in range(max_records):
+            msg = self.consumer.poll(1.0)
+            if msg is None:
+                logger.debug("Waiting for messages")
+                return
+            elif msg.error():
+                logger.error("ERROR: %s", msg.error())
+                return
+            else:
+                self.last_offsets[(msg.topic(), msg.partition())] = msg.offset()
+                logger.debug("Consumed %s", msg.value())
+                yield msg.value()
+        logger.debug("Offsets in batch %s", self.last_offsets)
+
+    def update_offsets(self, offsets: dict[Any, Any]) -> None:
+        # оффсеты автоматически берутся из кафки, поэтому не нужно из обновлять
+        pass

@@ -1,0 +1,5 @@
+Query_name: insert_rows, Average_exec_time: 0.008367453813552856, Count_of_inserted_rows: 1
+Query_name: insert_rows, Average_exec_time: 0.08395615935325623, Count_of_inserted_rows: 10
+Query_name: insert_rows, Average_exec_time: 1.6160258209705354, Count_of_inserted_rows: 200
+Query_name: insert_rows, Average_exec_time: 3.9117399179935455, Count_of_inserted_rows: 500
+Query_name: insert_rows, Average_exec_time: 8.6335749065876, Count_of_inserted_rows: 1000
