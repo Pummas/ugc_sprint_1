@@ -3,6 +3,8 @@ import os
 
 import backoff
 from clickhouse_driver import Client
+from clickhouse_driver.errors import Error as ClickhouseError
+from confluent_kafka import KafkaException
 from confluent_kafka.admin import AdminClient
 
 KAFKA_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:39092")
@@ -42,7 +44,7 @@ def check_clickhouse(clickhouse_client: Client) -> bool:
     try:
         clickhouse_client.execute("SHOW DATABASES")
         return True
-    except Exception:
+    except ClickhouseError:
         return False
 
 
@@ -51,7 +53,7 @@ def check_kafka(admin_client: AdminClient) -> bool:
     try:
         admin_client.list_topics()
         return True
-    except Exception:
+    except KafkaException:
         return False
 
 
