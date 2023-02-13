@@ -61,6 +61,8 @@ services:
     image: zookeeper:3.5
     container_name: zookeeper
     hostname: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
 
   clickhouse-node1:
     image: yandex/clickhouse-server:20.4
