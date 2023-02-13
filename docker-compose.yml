@@ -5,6 +5,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - zookeeper_1_data:/var/lib/zookeeper/data
 
   broker-1:
     image: confluentinc/cp-kafka:7.3.0
@@ -16,6 +18,8 @@ services:
       KAFKA_ADVERTISED_LISTENERS: INSIDE_DOCKER://broker-1:9092,ON_HOST://localhost:39092,INTERNAL://broker-1:29092
     env_file:
       - .env
+    volumes:
+      - broker_1_data:/var/lib/kafka/data
 
   broker-2:
     image: confluentinc/cp-kafka:7.3.0
@@ -27,6 +31,8 @@ services:
       KAFKA_ADVERTISED_LISTENERS: INSIDE_DOCKER://broker-2:9093,ON_HOST://localhost:39093,INTERNAL://broker-2:29093
     env_file:
       - .env
+    volumes:
+      - broker_2_data:/var/lib/kafka/data
 
   broker-3:
     image: confluentinc/cp-kafka:7.3.0
@@ -38,6 +44,8 @@ services:
       KAFKA_ADVERTISED_LISTENERS: INSIDE_DOCKER://broker-3:9094,ON_HOST://localhost:39094,INTERNAL://broker-3:29094
     env_file:
       - .env
+    volumes:
+      - broker_3_data:/var/lib/kafka/data
 
   etl_kafka:
     image: etl_kafka
@@ -53,6 +61,8 @@ services:
     hostname: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
 
   clickhouse-node1:
     image: yandex/clickhouse-server:20.4
@@ -61,6 +71,7 @@ services:
     volumes:
       - ./etl/data/node1:/etc/clickhouse-server
       - ./etl/clickhouse_db/init_one.sql:/docker-entrypoint-initdb.d/init.sql
+      - clickhouse_1_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
 
@@ -70,6 +81,7 @@ services:
     hostname: clickhouse-node2
     volumes:
       - ./etl/data/node2:/etc/clickhouse-server
+      - clickhouse_2_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
 
@@ -80,6 +92,7 @@ services:
     volumes:
       - ./etl/data/node3:/etc/clickhouse-server
       - ./etl/clickhouse_db/init_two.sql:/docker-entrypoint-initdb.d/init.sql
+      - clickhouse_3_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
 
@@ -89,6 +102,7 @@ services:
     hostname: clickhouse-node4
     volumes:
       - ./etl/data/node4:/etc/clickhouse-server
+      - clickhouse_4_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
 
@@ -109,3 +123,14 @@ services:
         - broker-1
         - broker-2
         - broker-3
+
+volumes:
+  zookeeper_1_data:
+  broker_1_data:
+  broker_2_data:
+  broker_3_data:
+  zookeeper_data:
+  clickhouse_1_data:
+  clickhouse_2_data:
+  clickhouse_3_data:
+  clickhouse_4_data:
