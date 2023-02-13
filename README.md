@@ -17,6 +17,8 @@
 - `make run` запустить сервисы
 - `make stop` остановить сервисы
 - `make etl-logs` посмотреть логи etl
+- `make build-all`: собрать образы
+- `prod-run`: запустить production версию
 
 
 ### Ссылка на проект - https://github.com/Pummas/ugc_sprint_1
