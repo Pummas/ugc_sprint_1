@@ -17,9 +17,8 @@ def create_test_events(count: int = 10) -> list[ViewedFilm]:
         event = ViewedFilm(
             user_id=uuid.uuid4(),
             film_id=uuid.uuid4(),
-            film_start_seconds=i,
-            film_stop_seconds=10 * i,
-            created_at=datetime.datetime.now(),
+            pos_start=i,
+            pos_end=10 * i
         )
 
         result.append(event)
