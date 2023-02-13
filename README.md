@@ -9,8 +9,8 @@
 ### Состав проекта
 
 /ugc - cервис UGC на FastAPI  
-/etl - ETL сервис
-/docs - Диаграммы по проекту 
+/etl - ETL сервис  
+/docs - Диаграммы по проекту  
 /research - Исследование по 2 бд: Clickhouse, Vertica
 
 Команды
