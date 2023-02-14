@@ -21,6 +21,11 @@ services:
       - "8123:8123"
       - "9000:9000"
 
+  clickhouse-node2:
+    ports:
+      - "8124:8123"
+      - "9001:9000"
+
   jaeger_agent:
     ports:
       - "${JAEGER_PORT}:6831/udp"
