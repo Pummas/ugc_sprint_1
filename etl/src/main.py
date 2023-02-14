@@ -11,10 +11,7 @@ from storage import KafkaStorage
 from transformer import KafkaTransformer
 
 if __name__ == "__main__":
-    from _producer import write_events
-
     create_kafka_topics(settings.TOPIC_NAMES)
-    write_events()
 
     consumer = confluent_kafka.Consumer(consumer_config)
     consumer.subscribe(settings.TOPIC_NAMES)

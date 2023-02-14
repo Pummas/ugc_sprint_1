@@ -1,5 +1,5 @@
 # Базовый образ с общими системными зависимостями для dev и prod
-FROM python:3.10.8-slim as python-base
+FROM python:3.10.10-slim as python-base
 ARG APP_NAME
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \

@@ -1,15 +1,15 @@
 import logging
 from abc import abstractmethod
 
+import backoff
 from clickhouse_driver import Client
+from clickhouse_driver.errors import NetworkError
 
 from model import ViewedFilm
 
 logger = logging.getLogger(__name__)
 
-CLICKHOUSE_INSERT_QUERY = (
-    "INSERT INTO default.viewed_films (user_id, film_id, film_start_seconds, film_stop_seconds, created_at) VALUES"
-)
+CLICKHOUSE_INSERT_QUERY = "INSERT INTO default.viewed_films (user_id, film_id, pos_start, pos_end) VALUES"
 
 
 class Database:
@@ -23,6 +23,7 @@ class Clickhouse(Database):
         self.client = client
         self.query = CLICKHOUSE_INSERT_QUERY
 
+    @backoff.on_exception(backoff.expo, exception=NetworkError, logger=logger, max_time=300, max_value=5)
     def load(self, data: list[ViewedFilm]) -> None:
         try:
             self.client.execute(self.query, [dict(row) for row in data])
