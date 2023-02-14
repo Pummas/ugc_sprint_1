@@ -6,7 +6,7 @@ from config import consumer_config, settings
 from etl import ETL
 from extractor import KafkaBroker
 from loader import Clickhouse
-from pre_start import create_kafka_topics
+from pre_start import create_kafka_topics, init_db
 from storage import KafkaStorage
 from transformer import KafkaTransformer
 
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     consumer = confluent_kafka.Consumer(consumer_config)
     consumer.subscribe(settings.TOPIC_NAMES)
     clickhouse_client = clickhouse_driver.Client(host=settings.CLICKHOUSE_HOST)
-
+    init_db(clickhouse_client)
     broker = KafkaBroker(consumer)
     clickhouse_db = Clickhouse(clickhouse_client)
     transformer = KafkaTransformer()
