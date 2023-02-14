@@ -65,18 +65,18 @@ services:
       - zookeeper_data:/var/lib/zookeeper/data
 
   clickhouse-node1:
-    image: yandex/clickhouse-server:20.4
+    image: yandex/clickhouse-server:21.3
     container_name: clickhouse-node1
     hostname: clickhouse-node1
     volumes:
       - ./etl/data/node1:/etc/clickhouse-server
-      - ./etl/clickhouse_db/init_one.sql:/docker-entrypoint-initdb.d/init.sql
+      #- ./etl/clickhouse_db/init_one.sql:/docker-entrypoint-initdb.d/init.sql
       - clickhouse_1_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
 
   clickhouse-node2:
-    image: yandex/clickhouse-server:20.4
+    image: yandex/clickhouse-server:21.3
     container_name: clickhouse-node2
     hostname: clickhouse-node2
     volumes:
@@ -86,18 +86,18 @@ services:
       - zookeeper
 
   clickhouse-node3:
-    image: yandex/clickhouse-server:20.4
+    image: yandex/clickhouse-server:21.3
     container_name: clickhouse-node3
     hostname: clickhouse-node3
     volumes:
       - ./etl/data/node3:/etc/clickhouse-server
-      - ./etl/clickhouse_db/init_two.sql:/docker-entrypoint-initdb.d/init.sql
+      #- ./etl/clickhouse_db/init_two.sql:/docker-entrypoint-initdb.d/init.sql
       - clickhouse_3_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
 
   clickhouse-node4:
-    image: yandex/clickhouse-server:20.4
+    image: yandex/clickhouse-server:21.3
     container_name: clickhouse-node4
     hostname: clickhouse-node4
     volumes:
