@@ -30,6 +30,7 @@ class MockKafkaConsumer:
     можно указывать количество партиций
     но топик только один
     """
+
     auto_offset = True
 
     def __init__(self, topic_name: str = "test", partition_count: int = 1):

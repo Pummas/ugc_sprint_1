@@ -1,27 +1,21 @@
-import datetime
 import uuid
 from time import sleep
 
 from model import ViewedFilm
-
 from .utils.mock_etl import MockKafkaConsumer
 
 # количество сообщений для тестирования
-MSG_COUNT = 10
+MSG_PER_PARTITION = 30
+MSG_COUNT = 3*MSG_PER_PARTITION
 
 
 def create_test_events(count: int = 10) -> list[ViewedFilm]:
     """Создает тестовый набор данных"""
     result = []
     for i in range(count):
-        event = ViewedFilm(
-            user_id=uuid.uuid4(),
-            film_id=uuid.uuid4(),
-            pos_start=i,
-            pos_end=10 * i
-        )
-
+        event = ViewedFilm(user_id=uuid.uuid4(), film_id=uuid.uuid4(), pos_start=i, pos_end=10 * i)
         result.append(event)
+
     return result
 
 
@@ -49,9 +43,9 @@ def test_etl_ok(app_etl):
     # надо дать время etl поработать иначе не успевает
     sleep(1)
 
-    assert kafka_consumer.offsets == [4, 3, 3]
     assert len(clickhouse_db.data) == MSG_COUNT
     assert compare_results(data, clickhouse_db.data)
+    assert kafka_consumer.offsets == [MSG_PER_PARTITION, MSG_PER_PARTITION, MSG_PER_PARTITION]
 
 
 def test_etl_with_bad_data(app_etl):
@@ -67,6 +61,6 @@ def test_etl_with_bad_data(app_etl):
     # надо дать время etl поработать иначе не успевает
     sleep(1)
 
-    assert kafka_consumer.offsets == [11, 6, 6]
     assert len(clickhouse_db.data) == MSG_COUNT
     assert compare_results(data, clickhouse_db.data)
+    assert kafka_consumer.offsets == [MSG_PER_PARTITION*2+3, MSG_PER_PARTITION*2, MSG_PER_PARTITION*2]
