@@ -49,6 +49,7 @@ services:
 
   etl_kafka:
     image: etl_kafka
+    restart: "always"
     container_name: etl_kafka
     env_file:
       - .env
@@ -70,7 +71,6 @@ services:
     hostname: clickhouse-node1
     volumes:
       - ./etl/data/node1:/etc/clickhouse-server
-      #- ./etl/clickhouse_db/init_one.sql:/docker-entrypoint-initdb.d/init.sql
       - clickhouse_1_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
@@ -91,7 +91,6 @@ services:
     hostname: clickhouse-node3
     volumes:
       - ./etl/data/node3:/etc/clickhouse-server
-      #- ./etl/clickhouse_db/init_two.sql:/docker-entrypoint-initdb.d/init.sql
       - clickhouse_3_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
