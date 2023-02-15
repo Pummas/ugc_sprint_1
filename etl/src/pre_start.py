@@ -3,6 +3,7 @@ import logging
 from confluent_kafka import KafkaError, KafkaException
 from confluent_kafka.admin import AdminClient, NewTopic
 from clickhouse_driver import Client
+from clickhouse_driver.errors import Error
 
 from config import admin_config
 
@@ -28,8 +29,12 @@ ENGINE = Distributed('company_cluster', ugc, viewed_films, rand());
 
 def init_db(db: Client):
     """Создает таблицы если надо"""
-    for query in QUERIES:
-        db.execute(query)
+    try:
+        for query in QUERIES:
+            db.execute(query)
+    except Error as err:
+        logger.exception("Failed to init ClickHouse db %s", err)
+        raise
 
 
 def create_kafka_topics(topic_names: list[str]) -> None:
