@@ -127,7 +127,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/configs:/etc/nginx/conf.d:ro
     ports:
-      - 8002:80
+      - "8002:80"
     depends_on:
       - ugc_service
 
