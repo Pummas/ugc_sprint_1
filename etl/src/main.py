@@ -1,3 +1,5 @@
+import logging
+
 import clickhouse_driver
 import confluent_kafka
 
@@ -9,6 +11,8 @@ from loader import Clickhouse
 from pre_start import create_kafka_topics, init_db
 from storage import KafkaStorage
 from transformer import KafkaTransformer
+
+logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     create_kafka_topics(settings.TOPIC_NAMES)
@@ -23,4 +27,9 @@ if __name__ == "__main__":
     storage = KafkaStorage(consumer)
 
     etl = ETL(extractor=broker, transformer=transformer, loader=clickhouse_db, storage=storage)
-    etl.run()
+    try:
+        etl.run()
+    except Exception as err:
+        # ловим все неожиданные исключения для логирования
+        logger.exception(err)
+        raise

@@ -13,18 +13,17 @@ producer: AIOKafkaProducer | None = None
 
 async def write_event(topic: str, key: str, value: str):
     try:
-        send_future = await producer.send(topic=topic, value=value.encode("utf-8"), key=key.encode("utf-8"))
-        response = await send_future  # wait until message is produced
+        response = await producer.send_and_wait(topic=topic, value=value.encode("utf-8"), key=key.encode("utf-8"))
 
     except KafkaTimeoutError as err:
-        logging.error(f"kafka timeout error: {err}")
+        logging.error('kafka timeout error: %s', err)
         raise HTTPException(status_code=HTTPStatus.REQUEST_TIMEOUT, detail="timeout error (Kafka)")
 
     except KafkaError as err:
-        logging.error(f"some kafka error: {err}")
+        logging.error('some kafka error: %s', err)
         raise HTTPException(status_code=HTTPStatus.CONFLICT, detail="Error due saving event (Kafka)")
 
-    logging.debug(f"save topic:{topic} key:{key} value:{value}, response:{response}")
+    logging.debug('save topic:%s key:%s  value:%s response:%s', topic, key, value, response)
 
 
 # backoff работает 60сек
@@ -43,7 +42,7 @@ async def init_kafka() -> bool:
     try:
         await try_to_start_kafka(kafka)
     except KafkaError as err:
-        logging.error(f"Kafka connection error: {err}")
+        logging.error('Kafka connection error: %s', err)
         # надо все равно закрыть кафку, иначе будет ошибка выводится
         await kafka.stop()
         return False
