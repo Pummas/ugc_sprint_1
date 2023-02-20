@@ -12,6 +12,13 @@ class Settings(BaseSettings):
     GROUP_ID: str = "etl_kafka"
     AUTO_OFFSET_RESET: str = "smallest"
 
+    SENTRY_DSN: str
+    SENTRY_AUTH_TOKEN: str
+    SENTRY_ORG: str
+    SENTRY_PROJECT: str
+    RELEASE_VERSION: str
+    ENVIRONMENT: str
+
 
 settings = Settings()
 

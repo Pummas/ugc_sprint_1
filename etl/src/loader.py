@@ -2,7 +2,9 @@ import logging
 from abc import abstractmethod
 
 import backoff
+import sentry_sdk
 from clickhouse_driver import Client
+from clickhouse_driver.errors import Error as ClickhouseError
 from clickhouse_driver.errors import NetworkError
 
 from model import ViewedFilm
@@ -28,9 +30,7 @@ class Clickhouse(Database):
         try:
             self.client.execute(self.query, [dict(row) for row in data])
             logger.debug("Saved %s messages to clickhouse", len(data))
-        except ValueError:
-            logger.exception("Value error on loading in clickhouse")
-            raise
-        except Exception:
+        except ClickhouseError as err:
             logger.exception("Error on loading in clickhouse")
-            raise
+            sentry_sdk.capture_exception(err)
+            raise SystemExit("Error on loading in clickhouse")
