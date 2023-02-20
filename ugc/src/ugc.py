@@ -5,8 +5,12 @@ from fastapi.responses import ORJSONResponse
 
 from api.v1 import films_view
 from core.config import settings
+from core.sentry import init_sentry
 from core.tracer import init_tracer
 from db import kafka_producer
+
+init_sentry()
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

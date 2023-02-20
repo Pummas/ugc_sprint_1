@@ -19,5 +19,12 @@ class Settings(BaseSettings):
 
     KAFKA_INSTANCE: str = Field("localhost:39092", env="UGC_KAFKA_INSTANCE")
 
+    SENTRY_DSN: str
+    SENTRY_AUTH_TOKEN: str
+    SENTRY_ORG: str
+    SENTRY_PROJECT: str
+    RELEASE_VERSION: str
+    ENVIRONMENT: str
+
 
 settings = Settings(_env_file=ENV_FILE)
