@@ -33,5 +33,7 @@ services:
       target: development
       tags:
           - "ugc_service"
+    volumes:
+      - ./ugc/src:/opt/app
     ports:
         - "8001:8001"
