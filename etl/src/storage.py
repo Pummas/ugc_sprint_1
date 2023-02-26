@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 from confluent_kafka import Consumer, TopicPartition
 
@@ -17,7 +17,7 @@ class KafkaStorage(Storage):
     def __init__(self, consumer: Consumer):
         self.consumer = consumer
 
-    def save_offsets(self, offsets: Dict[tuple[str, int], int]):
+    def save_offsets(self, offsets: Dict[Tuple[str, int], int]):
         topic_partitions = [
             TopicPartition(topic=key[0], partition=key[1], offset=value + 1) for key, value in offsets.items()
         ]
