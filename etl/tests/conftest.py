@@ -1,4 +1,5 @@
 import threading
+from typing import Tuple
 
 import pytest
 
@@ -22,7 +23,7 @@ def run_etl_thread(etl: ETL) -> threading.Thread:
 
 
 @pytest.fixture(scope="module")
-def app_etl() -> tuple[ETL, MockClickHouseClient, MockKafkaConsumer]:
+def app_etl() -> Tuple[ETL, MockClickHouseClient, MockKafkaConsumer]:
     consumer = MockKafkaConsumer(partition_count=3)
     extractor = KafkaBroker(consumer)
     db = MockClickHouseClient()
