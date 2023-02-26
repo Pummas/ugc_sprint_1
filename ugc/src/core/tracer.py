@@ -1,5 +1,6 @@
 import logging
 from http import HTTPStatus
+from typing import Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException
 from opentelemetry import trace
@@ -37,7 +38,7 @@ def configure_tracer() -> None:
         provider.add_span_processor(BatchSpanProcessor(console_exporter))
 
 
-async def require_header_request_id(x_request_id: str | None = Header(default=None)):
+async def require_header_request_id(x_request_id: Optional[str] = Header(default=None)):
     """Callback для проверки наличия в заголовке X-Request-Id для трассировки"""
     if x_request_id is None:
         if settings.DEBUG:

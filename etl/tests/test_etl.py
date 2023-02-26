@@ -1,7 +1,9 @@
 import uuid
 from time import sleep
+from typing import List
 
 from model import ViewedFilm
+
 from .utils.mock_etl import MockKafkaConsumer
 
 # количество сообщений для тестирования
@@ -9,7 +11,7 @@ MSG_PER_PARTITION = 30
 MSG_COUNT = 3*MSG_PER_PARTITION
 
 
-def create_test_events(count: int = 10) -> list[ViewedFilm]:
+def create_test_events(count: int = 10) -> List[ViewedFilm]:
     """Создает тестовый набор данных"""
     result = []
     for i in range(count):
@@ -19,13 +21,13 @@ def create_test_events(count: int = 10) -> list[ViewedFilm]:
     return result
 
 
-def load_data_to_consumer(consumer: MockKafkaConsumer, data: list[ViewedFilm]) -> None:
+def load_data_to_consumer(consumer: MockKafkaConsumer, data: List[ViewedFilm]) -> None:
     """Загружает данные равномерно по топикам"""
     for i, event in enumerate(data):
         consumer.add_message(message=event.json(), partition=i % len(consumer.topic))
 
 
-def compare_results(data_in: list[ViewedFilm], data_out: list[dict]) -> bool:
+def compare_results(data_in: List[ViewedFilm], data_out: List[dict]) -> bool:
     if not len(data_in) == len(data_out):
         return False
     for event in data_in:

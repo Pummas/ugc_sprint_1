@@ -1,5 +1,6 @@
 import logging
 from http import HTTPStatus
+from typing import List
 from uuid import UUID
 
 import jwt
@@ -27,7 +28,7 @@ class AccessTokenPayload(CoreModel):
     nbf: int
     exp: int
     name: str
-    roles: list[str]
+    roles: List[str]
     device_id: str
 
 
