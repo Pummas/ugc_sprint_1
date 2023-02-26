@@ -98,11 +98,6 @@ LOGGING = {
             "fmt": LOG_FORMAT,
             "datefmt": DATE_FORMAT,
         },
-        "uvicorn_default": {
-            "()": MsecTimeJsonFormatter,
-            "fmt": "%(asctime)s %(name)s %(levelname)s %(message)s",
-            "datefmt": DATE_FORMAT,
-        },
         "uvicorn_access": {
             "()": MsecTimeJsonFormatter,
             "fmt": (
@@ -118,11 +113,6 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "app_default",
         },
-        "uvicorn_default": {
-            "formatter": "uvicorn_default",
-            "class": "logging.StreamHandler",
-            "stream": "ext://sys.stdout",
-        },
         "uvicorn_access": {
             "formatter": "uvicorn_access",
             "()": UvicornAccessStreamHandler,
@@ -137,7 +127,7 @@ LOGGING = {
     },
     "loggers": {
         "uvicorn": {
-            "handlers": ["uvicorn_default"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },
@@ -154,6 +144,16 @@ LOGGING = {
         "backoff": {
             "handlers": ["console"],
             "level": "INFO",
+            "propagate": False,
+        },
+        "gunicorn.error": {
+            "level": "INFO",
+            "handlers": ["console"],
+            "propagate": False,
+        },
+        "gunicorn.access": {
+            "level": "INFO",
+            "handlers": ["console"],
             "propagate": False,
         },
     },
