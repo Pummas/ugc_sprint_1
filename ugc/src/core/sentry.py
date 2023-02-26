@@ -11,12 +11,13 @@ def before_send(event, hint):
 
 
 def init_sentry():
-    sentry_sdk.init(
-        dsn=settings.SENTRY_DSN,
-        debug=settings.DEBUG,
-        release=settings.RELEASE_VERSION,
-        request_bodies="medium",
-        sample_rate=1.0,
-        traces_sample_rate=0.0,
-        before_send=before_send,
-    )
+    if settings.ENABLE_SENTRY:
+        sentry_sdk.init(
+            dsn=settings.SENTRY_DSN,
+            debug=settings.DEBUG,
+            release=settings.RELEASE_VERSION,
+            request_bodies="medium",
+            sample_rate=1.0,
+            traces_sample_rate=0.0,
+            before_send=before_send,
+        )
