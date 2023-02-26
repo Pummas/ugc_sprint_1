@@ -1,9 +1,9 @@
 import logging
 
-from confluent_kafka import KafkaError, KafkaException
-from confluent_kafka.admin import AdminClient, NewTopic
 from clickhouse_driver import Client
 from clickhouse_driver.errors import Error
+from confluent_kafka import KafkaError, KafkaException
+from confluent_kafka.admin import AdminClient, NewTopic
 
 from config import admin_config
 
