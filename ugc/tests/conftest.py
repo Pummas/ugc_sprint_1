@@ -1,4 +1,5 @@
 import uuid
+from typing import List
 
 import pytest
 from fastapi.testclient import TestClient
@@ -28,7 +29,7 @@ def get_mock_token():
 
 
 class MockKafka:
-    data: list[dict] = []
+    data: List[dict] = []
 
     async def write_event(self, topic: str, key: str, value: str):
         self.data += [{"topic": topic, "key": key, "value": value}]
