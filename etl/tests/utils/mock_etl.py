@@ -72,7 +72,7 @@ class MockKafkaConsumer:
 class MockClickHouseClient:
     """Мок клиент для КликХауса"""
 
-    data: list[dict] = []
+    data: List[dict] = []
 
     def execute(self, query_str: str, values: List[dict]):
         self.data += values
