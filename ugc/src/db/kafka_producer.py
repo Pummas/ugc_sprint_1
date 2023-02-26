@@ -1,5 +1,6 @@
 import logging
 from http import HTTPStatus
+from typing import Optional
 
 import backoff
 import sentry_sdk
@@ -9,7 +10,7 @@ from fastapi import HTTPException
 
 from core.config import settings
 
-producer: AIOKafkaProducer | None = None
+producer: Optional[AIOKafkaProducer] = None
 
 
 async def write_event(topic: str, key: str, value: str):

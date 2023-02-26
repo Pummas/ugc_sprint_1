@@ -1,4 +1,5 @@
 import uuid
+from typing import List
 
 import pytest
 from fastapi.testclient import TestClient
@@ -7,6 +8,7 @@ import tests.source_root  # noqa F401 - прогружает путь до /src/
 from core.auth_bearer import AccessTokenPayload, jwt_bearer
 from db import film_view_storage
 from ugc import app
+
 from .constants import USER_ID
 
 
@@ -27,7 +29,7 @@ def get_mock_token():
 
 
 class MockKafka:
-    data: list[dict] = []
+    data: List[dict] = []
 
     async def write_event(self, topic: str, key: str, value: str):
         self.data += [{"topic": topic, "key": key, "value": value}]

@@ -1,4 +1,5 @@
 import socket
+from typing import List
 
 from pydantic import BaseSettings, Field
 
@@ -8,7 +9,7 @@ class Settings(BaseSettings):
     CLICKHOUSE_HOST: str = "localhost"
     DEBUG: bool = Field(False, env="ETL_KAFKA_DEBUG")
     MAX_BATCH_SIZE: int = Field(1000, env="ETL_KAFKA_RECORDS_PER_BATCH")
-    TOPIC_NAMES: list[str] = ["user.views"]
+    TOPIC_NAMES: List[str] = ["user.views"]
     GROUP_ID: str = "etl_kafka"
     AUTO_OFFSET_RESET: str = "smallest"
 

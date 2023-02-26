@@ -1,6 +1,6 @@
 import logging
 from abc import abstractmethod
-from typing import Any, Iterator
+from typing import Any, Iterator, List
 
 import sentry_sdk
 from pydantic import ValidationError
@@ -12,12 +12,12 @@ logger = logging.getLogger(__name__)
 
 class Transformer:
     @abstractmethod
-    def transform(self, data: Iterator[Any]) -> list[Any]:
+    def transform(self, data: Iterator[Any]) -> List[Any]:
         pass
 
 
 class KafkaTransformer(Transformer):
-    def transform(self, data: Iterator[bytes]) -> list[ViewedFilm]:
+    def transform(self, data: Iterator[bytes]) -> List[ViewedFilm]:
         result = []
         for record in data:
             try:
