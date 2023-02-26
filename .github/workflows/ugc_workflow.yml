@@ -49,8 +49,8 @@ jobs:
 
     - name: Test with pytest
       run: |
-        pytest ugc/tests/test_ugc_service.py --html=lint_report/tests/index.html --self-contained-html
-        pytest etl/tests/test_etl.py --html=lint_report/tests/index.html --self-contained-html
+        pytest ugc/tests/ --html=lint_report/ugc_tests/index.html --self-contained-html
+        pytest etl/tests/ --html=lint_report/etl_tests/index.html --self-contained-html
 
     - name: Load lint report
       uses: actions/upload-artifact@v3.1.0
