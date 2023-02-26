@@ -8,7 +8,7 @@ from .utils.mock_etl import MockKafkaConsumer
 
 # количество сообщений для тестирования
 MSG_PER_PARTITION = 30
-MSG_COUNT = 3*MSG_PER_PARTITION
+MSG_COUNT = 3 * MSG_PER_PARTITION
 
 
 def create_test_events(count: int = 10) -> List[ViewedFilm]:
@@ -65,4 +65,4 @@ def test_etl_with_bad_data(app_etl):
 
     assert len(clickhouse_db.data) == MSG_COUNT
     assert compare_results(data, clickhouse_db.data)
-    assert kafka_consumer.offsets == [MSG_PER_PARTITION*2+3, MSG_PER_PARTITION*2, MSG_PER_PARTITION*2]
+    assert kafka_consumer.offsets == [MSG_PER_PARTITION * 2 + 3, MSG_PER_PARTITION * 2, MSG_PER_PARTITION * 2]
