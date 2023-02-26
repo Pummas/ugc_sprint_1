@@ -2,21 +2,21 @@ import logging
 import logging.config as logging_config
 import time
 from contextvars import ContextVar
-from typing import Any
+from typing import Any, AnyStr, Dict, Optional
 
 from pythonjsonlogger.jsonlogger import JsonFormatter
 
 from core.config import settings
 
-_log_extra_info: ContextVar[dict] = ContextVar("_log_extra_info")
+_log_extra_info: ContextVar[Dict[AnyStr, Any]] = ContextVar("_log_extra_info")
 
 
-def set_log_extra(log_extra: dict[str, Any]):
+def set_log_extra(log_extra: Dict[AnyStr, Any]):
     """Сохранить дополнительную информацию для логирования."""
     _log_extra_info.set(log_extra)
 
 
-def get_log_extra() -> dict[str, Any] | None:
+def get_log_extra() -> Optional[Dict[AnyStr, Any]]:
     """Получить дополнительную информацию для логирования."""
     return _log_extra_info.get(None)
 
@@ -31,7 +31,7 @@ class ExtraContextInfoLogger(logging.getLoggerClass()):
     def __init__(self, name):
         logging.Logger.__init__(self, name=name)
 
-    def _log(self, *args, extra=None, **kwargs):
+    def _log(self, *args, extra: Optional[Dict[AnyStr, Any]] = None, **kwargs):
         extra_info = get_log_extra()
         if extra is not None and extra_info is not None:
             extra_info = extra | extra_info
@@ -46,7 +46,7 @@ class UvicornAccessStreamHandler(logging.StreamHandler):
     для access-логов.
     """
 
-    def emit(self, record):
+    def emit(self, record: logging.LogRecord):
         if record.name == "uvicorn.access":
             client_addr, method, full_path, http_version, status_code = record.args
             record.__dict__.update(
@@ -64,7 +64,7 @@ class UvicornAccessStreamHandler(logging.StreamHandler):
 class MsecTimeJsonFormatter(JsonFormatter):
     """Добавляет в формат даты-времени параметр %F для миллисекунд."""
 
-    def formatTime(self, record: logging.LogRecord, datefmt: str | None = None):
+    def formatTime(self, record: logging.LogRecord, datefmt: Optional[AnyStr] = None):
         if datefmt:
             ct = self.converter(record.created)
             if "%F" in datefmt:
