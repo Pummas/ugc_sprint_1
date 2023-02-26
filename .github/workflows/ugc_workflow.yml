@@ -1,0 +1,98 @@
+name: UGC-service workflow
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  linters_tests:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        version: [3.7, 3.8, 3.9]
+
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.version }}
+
+    - name: Create folder for reports
+      run: |
+        mkdir -p lint_report/
+
+    - name: Install dependencies and linters
+      run: |
+        python -m pip install --upgrade pip
+        pip install wemake-python-styleguide mypy isort flake8-html lxml pytest-html
+        pip install -r ugc/requirements.txt -r ugc/requirements.dev.txt
+        pip install -r etl/requirements.txt
+
+    - name: Check types with mypy
+      run: |
+        mypy . --html-report lint_report/mypy/ || true
+
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 --select=E9,F63,F7,F82 .
+        # exit-zero treats all errors as warnings.
+        flake8 --exit-zero --format=html --htmldir=lint_report/flake8/ .
+
+    - name: Lint with isort
+      run: isort --check-only .
+
+    - name: Test with pytest
+      run: |
+        pytest ugc/tests/ --html=lint_report/ugc_tests/index.html --self-contained-html
+        pytest etl/tests/ --html=lint_report/etl_tests/index.html --self-contained-html
+
+    - name: Load lint report
+      uses: actions/upload-artifact@v3.1.0
+      if: always()
+      with:
+        name: lint_report
+        path: lint_report/
+
+  black:
+    runs-on: ubuntu-latest
+    needs: linters_tests
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Check files using the black formatter
+        uses: rickstaa/action-black@v1
+        id: action_black
+        with:
+          black_args: "."
+
+      - name: Create Pull Request
+        if: steps.action_black.outputs.is_formatted == 'true'
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Format Python code with psf/black push"
+          commit-message: ":art: Format Python code with psf/black"
+          body: |
+            There appear to be some python formatting errors in ${{ github.sha }}. This pull request
+            uses the [psf/black](https://github.com/psf/black) formatter to fix these issues.
+          base: ${{ github.head_ref }} # Creates pull request onto pull request or commit branch
+          branch: actions/black
+
+  send_message:
+    runs-on: ubuntu-latest
+    needs: black
+    steps:
+      - name: send message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ github.actor }} send pull request to ${{ github.repository }}
