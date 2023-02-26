@@ -2,6 +2,7 @@ import uuid
 from time import sleep
 
 from model import ViewedFilm
+
 from .utils.mock_etl import MockKafkaConsumer
 
 # количество сообщений для тестирования
