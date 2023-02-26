@@ -1,7 +1,10 @@
 import logging
 import logging.config as logging_config
+import time
 from contextvars import ContextVar
 from typing import Any
+
+from pythonjsonlogger.jsonlogger import JsonFormatter
 
 from core.config import settings
 
@@ -43,9 +46,6 @@ class UvicornAccessStreamHandler(logging.StreamHandler):
     для access-логов.
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def emit(self, record):
         if record.name == "uvicorn.access":
             client_addr, method, full_path, http_version, status_code = record.args
@@ -61,6 +61,20 @@ class UvicornAccessStreamHandler(logging.StreamHandler):
         super().emit(record)
 
 
+class MsecTimeJsonFormatter(JsonFormatter):
+    """Добавляет в формат даты-времени параметр %F для миллисекунд."""
+
+    def formatTime(self, record: logging.LogRecord, datefmt: str | None = None):
+        if datefmt:
+            ct = self.converter(record.created)
+            if "%F" in datefmt:
+                msec = "%03d" % record.msecs
+                datefmt = datefmt.replace("%F", msec)
+            return time.strftime(datefmt, ct)
+        else:
+            return super().formatTime(record, datefmt=None)
+
+
 # you can easy enable log file
 LOG_FILE = "/dev/null"
 
@@ -71,6 +85,8 @@ else:
     LOG_FORMAT = "%(asctime)s %(name)s %(levelname)s %(message)s"
     LOG_LEVEL = logging.INFO
 
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%F%z"  # ISO8601, %F - миллисекунды
+
 LOG_DEFAULT_HANDLERS = ["console", "file"]
 
 LOGGING = {
@@ -78,19 +94,22 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "app_default": {
-            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "()": MsecTimeJsonFormatter,
             "fmt": LOG_FORMAT,
+            "datefmt": DATE_FORMAT,
         },
         "uvicorn_default": {
-            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "()": MsecTimeJsonFormatter,
             "fmt": "%(asctime)s %(name)s %(levelname)s %(message)s",
+            "datefmt": DATE_FORMAT,
         },
         "uvicorn_access": {
-            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "()": MsecTimeJsonFormatter,
             "fmt": (
                 "%(asctime)s %(name)s %(levelname)s"
                 "%(client_addr)s %(method)s %(full_path)s %(http_version)s %(status_code)s"
             ),
+            "datefmt": DATE_FORMAT,
         },
     },
     "handlers": {
