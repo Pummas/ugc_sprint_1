@@ -7,17 +7,17 @@ import uuid
 from tqdm import tqdm
 
 from config import (
-    DATA_DIR,
-    USERS_FILENAME,
-    USERS_COUNT,
-    MOVIES_FILENAME,
-    MOVIES_COUNT,
-    BOOKMARKS_FILENAME,
     BOOKMARKS_COUNT,
-    LIKES_FILENAME,
+    BOOKMARKS_FILENAME,
+    DATA_DIR,
     LIKES_COUNT,
-    REVIEWS_FILENAME,
+    LIKES_FILENAME,
+    MOVIES_COUNT,
+    MOVIES_FILENAME,
     REVIEWS_COUNT,
+    REVIEWS_FILENAME,
+    USERS_COUNT,
+    USERS_FILENAME,
 )
 from models import EventBookmark, EventLike, EventReview, Movie, User
 

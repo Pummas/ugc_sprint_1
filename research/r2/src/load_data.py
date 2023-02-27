@@ -6,15 +6,15 @@ import time
 from tqdm import tqdm
 
 from config import (
-    DATA_DIR,
-    USERS_FILENAME,
-    MOVIES_FILENAME,
     BOOKMARKS_FILENAME,
+    DATA_DIR,
     LIKES_FILENAME,
-    REVIEWS_FILENAME,
-    RESULT_DIR,
-    LOAD_PG_FILENAME,
     LOAD_MONGO_FILENAME,
+    LOAD_PG_FILENAME,
+    MOVIES_FILENAME,
+    RESULT_DIR,
+    REVIEWS_FILENAME,
+    USERS_FILENAME,
 )
 from db import mongo_db, postgres_db
 from models import EventBookmark, EventLike, EventReview, Movie, User

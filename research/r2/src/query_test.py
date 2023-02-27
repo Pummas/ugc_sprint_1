@@ -6,7 +6,7 @@ from uuid import UUID
 
 from tqdm import tqdm
 
-from config import DATA_DIR, USERS_FILENAME, MOVIES_FILENAME, RESULT_DIR, QUERY_PG_FILENAME, QUERY_MONGO_FILENAME
+from config import DATA_DIR, MOVIES_FILENAME, QUERY_MONGO_FILENAME, QUERY_PG_FILENAME, RESULT_DIR, USERS_FILENAME
 from db import mongo_db, postgres_db
 
 users = []
