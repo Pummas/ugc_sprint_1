@@ -1,11 +1,23 @@
 import csv
+import json
 import logging
 import time
-import json
+
 from tqdm import tqdm
-from db import postgres_db, mongo_db
-from config import *
-from models import User, Movie, EventBookmark, EventLike, EventReview
+
+from config import (
+    DATA_DIR,
+    USERS_FILENAME,
+    MOVIES_FILENAME,
+    BOOKMARKS_FILENAME,
+    LIKES_FILENAME,
+    REVIEWS_FILENAME,
+    RESULT_DIR,
+    LOAD_PG_FILENAME,
+    LOAD_MONGO_FILENAME,
+)
+from db import mongo_db, postgres_db
+from models import EventBookmark, EventLike, EventReview, Movie, User
 
 
 def load_steep(filename, postfix, func):

@@ -1,12 +1,13 @@
-import json
-from uuid import UUID
 import csv
+import json
 import logging
 import time
-from tqdm import tqdm
-from db import postgres_db, mongo_db
-from config import *
+from uuid import UUID
 
+from tqdm import tqdm
+
+from config import DATA_DIR, USERS_FILENAME, MOVIES_FILENAME, RESULT_DIR, QUERY_PG_FILENAME, QUERY_MONGO_FILENAME
+from db import mongo_db, postgres_db
 
 users = []
 movies = []

@@ -3,15 +3,16 @@ from uuid import UUID
 import psycopg2
 from psycopg2.extras import DictCursor
 
-from .base_db import BaseDb
 from config import PG_CONNECTION_STRING
-from models import EventBookmark, Movie, User, EventReview, EventLike
+from models import EventBookmark, EventLike, EventReview, Movie, User
+
+from .base_db import BaseDb
 
 QUERY_CREATE_TEST_TABLES = """
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DROP TABLE IF EXISTS test;
 CREATE TABLE IF NOT EXISTS test (
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(), 
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id uuid,
     film_id uuid,
     review_text TEXT,
@@ -20,7 +21,7 @@ CREATE TABLE IF NOT EXISTS test (
 CREATE TABLE IF NOT EXISTS person (
     id uuid PRIMARY KEY,
     name VARCHAR(255)
-); 
+);
 CREATE TABLE IF NOT EXISTS movie (
     id uuid PRIMARY KEY,
     name VARCHAR(255)
@@ -47,7 +48,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS review_idx ON review(movie_id, person_id);
 CREATE INDEX IF NOT EXISTS like_score_idx ON movie_like(person_id, score);
 """
 QUERY_INSERT_TEST_DATA = """
-INSERT INTO  test(user_id, film_id, review_text, created_at) 
+INSERT INTO  test(user_id, film_id, review_text, created_at)
 VALUES(%(user_id)s, %(film_id)s, %(review_text)s, %(created_at)s);
 """
 
@@ -84,7 +85,7 @@ class PostgresDB(BaseDb):
 
     def add_like(self, event: EventLike):
         QUERY = """
-        INSERT INTO movie_like (movie_id, person_id, score) 
+        INSERT INTO movie_like (movie_id, person_id, score)
         VALUES (%(movie_id)s, %(user_id)s, %(like)s)
         ON CONFLICT (movie_id, person_id) DO UPDATE
             SET score = EXCLUDED.score;
@@ -95,7 +96,7 @@ class PostgresDB(BaseDb):
 
     def add_review(self, event: EventReview):
         QUERY = """
-        INSERT INTO review (movie_id, person_id, review_text, created_at) 
+        INSERT INTO review (movie_id, person_id, review_text, created_at)
         VALUES (%(movie_id)s, %(user_id)s, %(text)s, %(created_at)s)
         ON CONFLICT (movie_id, person_id) DO UPDATE
             SET review_text = EXCLUDED.review_text,

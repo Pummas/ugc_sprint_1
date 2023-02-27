@@ -2,8 +2,9 @@ from uuid import UUID
 
 from pymongo import MongoClient
 
-from models import Movie, User, EventLike, EventBookmark, EventReview
 from config import MONGO_CONNECTION_STRING
+from models import EventBookmark, EventLike, EventReview, Movie, User
+
 from .base_db import BaseDb
 
 

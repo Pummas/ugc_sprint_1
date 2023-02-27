@@ -1,7 +1,7 @@
 import datetime
+from uuid import UUID
 
 from core_model import CoreModel
-from uuid import UUID
 
 
 class User(CoreModel):

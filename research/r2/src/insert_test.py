@@ -1,12 +1,13 @@
-import datetime
-import uuid
-import logging
-from tqdm import tqdm
-import time
 import csv
+import datetime
+import logging
+import time
+import uuid
 
-from db import postgres_db, mongo_db
-from config import RESULT_DIR, BATCHES, RECORD_COUNT
+from tqdm import tqdm
+
+from config import BATCHES, RECORD_COUNT, RESULT_DIR
+from db import mongo_db, postgres_db
 
 logging.basicConfig(level=logging.INFO)
 

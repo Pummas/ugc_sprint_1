@@ -1,12 +1,25 @@
+import csv
 import datetime
 import logging
+import random
 import uuid
 
-import csv
-import random
 from tqdm import tqdm
-from models import Movie, User, EventBookmark, EventLike, EventReview
-from config import *
+
+from config import (
+    DATA_DIR,
+    USERS_FILENAME,
+    USERS_COUNT,
+    MOVIES_FILENAME,
+    MOVIES_COUNT,
+    BOOKMARKS_FILENAME,
+    BOOKMARKS_COUNT,
+    LIKES_FILENAME,
+    LIKES_COUNT,
+    REVIEWS_FILENAME,
+    REVIEWS_COUNT,
+)
+from models import EventBookmark, EventLike, EventReview, Movie, User
 
 
 def generate_users():

@@ -1,6 +1,7 @@
-from uuid import UUID
 from abc import ABC, abstractmethod
-from models import Movie, User, EventLike, EventBookmark, EventReview
+from uuid import UUID
+
+from models import EventBookmark, EventLike, EventReview, Movie, User
 
 
 class BaseDb(ABC):
