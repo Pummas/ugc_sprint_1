@@ -1,9 +1,9 @@
 import random
 
 import vertica_python
-from utils import calculate_avg, measure_exec_time, select_movie_ids, select_user_ids
 
 from config import CONNECTION_INFO
+from utils import calculate_avg, measure_exec_time, select_movie_ids, select_user_ids
 
 ITERATIONS = 200
 

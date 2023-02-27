@@ -2,9 +2,9 @@ import random
 from datetime import datetime
 
 import vertica_python
-from utils import calculate_avg, measure_exec_time, select_movie_ids, select_user_ids
 
 from config import CONNECTION_INFO
+from utils import calculate_avg, measure_exec_time, select_movie_ids, select_user_ids
 
 BATCH_SIZES = [1, 10, 200, 500, 1000]
 ITERATIONS = 200
