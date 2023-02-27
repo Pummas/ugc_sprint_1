@@ -1,5 +1,6 @@
 import logging
 from http import HTTPStatus
+from typing import Optional
 
 import backoff
 from aiokafka import AIOKafkaProducer
@@ -8,7 +9,7 @@ from fastapi import HTTPException
 
 from core.config import settings
 
-producer: AIOKafkaProducer | None = None
+producer: Optional[AIOKafkaProducer] = None
 
 
 async def write_event(topic: str, key: str, value: str):
@@ -16,14 +17,14 @@ async def write_event(topic: str, key: str, value: str):
         response = await producer.send_and_wait(topic=topic, value=value.encode("utf-8"), key=key.encode("utf-8"))
 
     except KafkaTimeoutError as err:
-        logging.error('kafka timeout error: %s', err)
+        logging.error("kafka timeout error: %s", err)
         raise HTTPException(status_code=HTTPStatus.REQUEST_TIMEOUT, detail="timeout error (Kafka)")
 
     except KafkaError as err:
-        logging.error('some kafka error: %s', err)
+        logging.error("some kafka error: %s", err)
         raise HTTPException(status_code=HTTPStatus.CONFLICT, detail="Error due saving event (Kafka)")
 
-    logging.debug('save topic:%s key:%s  value:%s response:%s', topic, key, value, response)
+    logging.debug("save topic:%s key:%s  value:%s response:%s", topic, key, value, response)
 
 
 # backoff работает 60сек
@@ -42,7 +43,7 @@ async def init_kafka() -> bool:
     try:
         await try_to_start_kafka(kafka)
     except KafkaError as err:
-        logging.error('Kafka connection error: %s', err)
+        logging.error("Kafka connection error: %s", err)
         # надо все равно закрыть кафку, иначе будет ошибка выводится
         await kafka.stop()
         return False

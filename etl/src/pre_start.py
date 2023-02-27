@@ -1,9 +1,10 @@
 import logging
+from typing import List
 
-from confluent_kafka import KafkaError, KafkaException
-from confluent_kafka.admin import AdminClient, NewTopic
 from clickhouse_driver import Client
 from clickhouse_driver.errors import Error
+from confluent_kafka import KafkaError, KafkaException
+from confluent_kafka.admin import AdminClient, NewTopic
 
 from config import admin_config
 
@@ -37,7 +38,7 @@ def init_db(db: Client) -> None:
         raise
 
 
-def create_kafka_topics(topic_names: list[str]) -> None:
+def create_kafka_topics(topic_names: List[str]) -> None:
     new_topics = [NewTopic(topic_name, num_partitions=6, replication_factor=3) for topic_name in topic_names]
     admin_client = AdminClient(admin_config)
     futures = admin_client.create_topics(new_topics, validate_only=False)

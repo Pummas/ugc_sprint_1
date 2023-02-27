@@ -1,5 +1,6 @@
 import logging
 from abc import abstractmethod
+from typing import List
 
 import backoff
 from clickhouse_driver import Client
@@ -24,7 +25,7 @@ class Clickhouse(Database):
         self.query = CLICKHOUSE_INSERT_QUERY
 
     @backoff.on_exception(backoff.expo, exception=NetworkError, logger=logger, max_time=300, max_value=5)
-    def load(self, data: list[ViewedFilm]) -> None:
+    def load(self, data: List[ViewedFilm]) -> None:
         try:
             self.client.execute(self.query, [dict(row) for row in data])
             logger.debug("Saved %s messages to clickhouse", len(data))

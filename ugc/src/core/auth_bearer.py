@@ -1,5 +1,6 @@
 import logging
 from http import HTTPStatus
+from typing import List
 from uuid import UUID
 
 import jwt
@@ -27,7 +28,7 @@ class AccessTokenPayload(CoreModel):
     nbf: int
     exp: int
     name: str
-    roles: list[str]
+    roles: List[str]
     device_id: str
 
 
@@ -51,7 +52,7 @@ class JWTBearer(HTTPBearer):
         except jwt.PyJWTError:
             raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Invalid token or expired token.")
 
-        logger.debug('jwt-token payload: %s', decoded_token)
+        logger.debug("jwt-token payload: %s", decoded_token)
         token = AccessTokenPayload(**decoded_token)
         return token
 
