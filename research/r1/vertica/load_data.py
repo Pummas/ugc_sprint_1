@@ -5,7 +5,7 @@ from uuid import uuid4
 
 import vertica_python
 
-from config import CONNECTION_INFO
+from research.r1.vertica.config import CONNECTION_INFO
 
 logger = logging.getLogger(__name__)
 

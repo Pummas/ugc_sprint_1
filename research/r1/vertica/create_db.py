@@ -1,6 +1,6 @@
 import vertica_python
 
-from config import CONNECTION_INFO
+from research.r1.vertica.config import CONNECTION_INFO
 
 if __name__ == "__main__":
     with vertica_python.connect(**CONNECTION_INFO) as connection:

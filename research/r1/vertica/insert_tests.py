@@ -3,7 +3,7 @@ from datetime import datetime
 
 import vertica_python
 
-from config import CONNECTION_INFO
+from research.r1.vertica.config import CONNECTION_INFO
 from utils import calculate_avg, measure_exec_time, select_movie_ids, select_user_ids
 
 BATCH_SIZES = [1, 10, 200, 500, 1000]
