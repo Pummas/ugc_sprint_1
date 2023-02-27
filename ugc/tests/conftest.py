@@ -8,7 +8,7 @@ import ugc.tests.source_root  # noqa F401 - прогружает путь до /
 # import tests.source_root  # noqa F401 - прогружает путь до /src/....
 from core.auth_bearer import AccessTokenPayload, jwt_bearer
 from db import film_view_storage
-from ugc import app
+from ugc.src.ugc import app
 
 from .constants import USER_ID
 

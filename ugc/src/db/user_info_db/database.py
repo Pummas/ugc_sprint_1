@@ -2,7 +2,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 from core.config import settings
 
-client = AsyncIOMotorClient(settings.MONGODB_URL)
+client = AsyncIOMotorClient(settings.MONGO_URL)
 
 db = client["prod-db"]
 
