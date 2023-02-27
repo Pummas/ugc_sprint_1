@@ -2,6 +2,22 @@
 line-length = 120
 
 [tool.isort]
-src_paths = ["**/src"]
+src_paths = [
+    "etl/src",
+    "ugc/src",
+    "etl/tests/utils",
+    "etl/tests",
+    "ugc/tests",
+    "research/clickhouse",
+    "research/vertica",
+    "ugc/src/core",
+    "ugc/src/db",
+    "ugc/src/models",
+    "ugc/src/api",
+]
 line_length = 120
 profile = "black"
+
+[tool.mypy]
+ignore_missing_imports = true
+explicit_package_bases = true

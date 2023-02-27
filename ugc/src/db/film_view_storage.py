@@ -10,7 +10,7 @@ class FilmViewStorage(StorageService):
     kafka_topic = FILM_VIEW_TOPIC
 
     async def save(self, data: DTOViewEvent):
-        logging.debug(f"save view: {data.dict()}")
+        logging.debug("save view: %s", data.dict())
         await write_event(topic=self.kafka_topic, key=str(data.user_id), value=data.json())
 
 

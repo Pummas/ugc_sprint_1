@@ -1,3 +1,5 @@
+from typing import List
+
 from confluent_kafka.cimpl import TopicPartition
 
 
@@ -62,7 +64,7 @@ class MockKafkaConsumer:
         """Добавляем событие в партицию"""
         self.topic[partition].append(message)
 
-    def store_offsets(self, offsets: list[TopicPartition]):
+    def store_offsets(self, offsets: List[TopicPartition]):
         for item in offsets:
             assert self.offsets[item.partition] == item.offset
 
@@ -70,7 +72,7 @@ class MockKafkaConsumer:
 class MockClickHouseClient:
     """Мок клиент для КликХауса"""
 
-    data: list[dict] = []
+    data: List[dict] = []
 
-    def execute(self, query_str: str, values: list[dict]):
+    def execute(self, query_str: str, values: List[dict]):
         self.data += values

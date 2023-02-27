@@ -1,6 +1,6 @@
 import logging
 from abc import abstractmethod
-from typing import Any, Iterator
+from typing import Any, Dict, Iterator
 
 from confluent_kafka import Consumer
 
@@ -16,7 +16,7 @@ class MessageBroker:
         pass
 
     @abstractmethod
-    def update_offsets(self, offsets: dict[Any, Any]) -> None:
+    def update_offsets(self, offsets: Dict[Any, Any]) -> None:
         pass
 
 
@@ -41,6 +41,6 @@ class KafkaBroker(MessageBroker):
                 yield msg.value()
         logger.debug("Offsets in batch %s", self.last_offsets)
 
-    def update_offsets(self, offsets: dict[Any, Any]) -> None:
+    def update_offsets(self, offsets: Dict[Any, Any]) -> None:
         # оффсеты автоматически берутся из кафки, поэтому не нужно из обновлять
         pass
