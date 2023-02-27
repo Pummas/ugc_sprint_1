@@ -1,6 +1,7 @@
 import random
 
 from clickhouse_driver import Client
+
 from utils import calculate_avg, measure_exec_time, select_movies_ids_from_db, select_users_ids_from_db
 
 ITERATIONS = 200

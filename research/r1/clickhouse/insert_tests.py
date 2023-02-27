@@ -2,7 +2,8 @@ import random
 from datetime import datetime
 
 from clickhouse_driver import Client
-from utils import calculate_avg, measure_exec_time, select_movies_ids_from_db, select_users_ids_from_db
+
+    from utils import calculate_avg, measure_exec_time, select_movies_ids_from_db, select_users_ids_from_db
 
 BATCH_SIZES = [1, 10, 200, 500, 1000]
 ITERATIONS = 200

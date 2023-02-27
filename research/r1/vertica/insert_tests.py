@@ -2,6 +2,7 @@ import random
 from datetime import datetime
 
 import vertica_python
+
 from research.r1.vertica.config import CONNECTION_INFO
 from utils import calculate_avg, measure_exec_time, select_movie_ids, select_user_ids
 
