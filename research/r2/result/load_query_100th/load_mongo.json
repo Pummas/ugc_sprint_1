@@ -1,0 +1,1 @@
+{"load users": {"count": 100000, "time": 234.2881965637207}, "load movies": {"count": 100000, "time": 234.48352432250977}, "load bookmarks": {"count": 1000000, "time": 2365.6707804203033}, "load likes": {"count": 1000000, "time": 2675.4226303100586}, "load reviews": {"count": 1000000, "time": 2823.9750502109528}}
