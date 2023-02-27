@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
-from api.v1 import films_view
+from api.v1 import films_view, user_info
 from core.config import settings
 from core.tracer import init_tracer
 from db import kafka_producer
@@ -33,3 +33,4 @@ async def shutdown_event():
 
 
 app.include_router(films_view.router, prefix="/ugc/v1/events", tags=["Events"])
+app.include_router(user_info.router, prefix="/ugc/v1/user_info", tags=["UserInfo"])

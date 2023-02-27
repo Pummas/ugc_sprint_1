@@ -1,3 +1,4 @@
+version: '3.7'
 services:
   zookeeper-1:
     image: confluentinc/cp-zookeeper:7.3.0
@@ -114,11 +115,11 @@ services:
     image: ugc_service
     container_name: ugc_service
     env_file:
-        - .env
+      - .env
     depends_on:
-        - broker-1
-        - broker-2
-        - broker-3
+      - broker-1
+      - broker-2
+      - broker-3
 
   nginx:
     image: nginx:1.23.3-alpine
@@ -130,6 +131,17 @@ services:
     depends_on:
       - ugc_service
 
+  mongodb_container:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: prod-db
+      MONGO_INITDB_ROOT_USERNAME: user_name
+      MONGO_INITDB_ROOT_PASSWORD: user_password
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
 volumes:
   zookeeper_1_data:
   broker_1_data:
@@ -140,3 +152,4 @@ volumes:
   clickhouse_2_data:
   clickhouse_3_data:
   clickhouse_4_data:
+  mongodb_data_container:
