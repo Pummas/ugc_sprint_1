@@ -1,5 +1,4 @@
 import vertica_python
-
 from research.r1.vertica.config import CONNECTION_INFO
 
 if __name__ == "__main__":
