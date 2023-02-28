@@ -21,11 +21,7 @@ class Settings(BaseSettings):
 
     ENABLE_SENTRY: bool = Field(False, env="ENABLE_SENTRY")
     SENTRY_DSN: str = Field("<sentry dsn>", env="SENTRY_DSN")
-    SENTRY_AUTH_TOKEN: str = Field("<sentry auth token>", env="SENTRY_AUTH_TOKEN")
-    SENTRY_ORG: str = Field("<organization>", env="SENTRY_ORG")
-    SENTRY_PROJECT: str = Field("yp-ugc-service", env="SENTRY_PROJECT")
     RELEASE_VERSION: str = Field("ugc-service@1.0.0", env="RELEASE_VERSION")
-    ENVIRONMENT: str = Field("production", env="ENVIRONMENT")
 
 
 settings = Settings(_env_file=ENV_FILE)
