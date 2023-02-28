@@ -1,4 +1,5 @@
 import sentry_sdk
+from sentry_sdk.integrations.logging import LoggingIntegration
 
 from core.config import settings
 
@@ -20,4 +21,5 @@ def init_sentry():
             sample_rate=1.0,
             traces_sample_rate=0.0,
             before_send=before_send,
+            integrations=[LoggingIntegration(event_level=None)],
         )
