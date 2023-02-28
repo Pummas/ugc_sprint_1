@@ -7,6 +7,11 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     volumes:
       - zookeeper_1_data:/var/lib/zookeeper/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   broker-1:
     image: confluentinc/cp-kafka:7.3.0
@@ -20,6 +25,11 @@ services:
       - .env
     volumes:
       - broker_1_data:/var/lib/kafka/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   broker-2:
     image: confluentinc/cp-kafka:7.3.0
@@ -33,6 +43,11 @@ services:
       - .env
     volumes:
       - broker_2_data:/var/lib/kafka/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   broker-3:
     image: confluentinc/cp-kafka:7.3.0
@@ -46,6 +61,11 @@ services:
       - .env
     volumes:
       - broker_3_data:/var/lib/kafka/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   etl_kafka:
     image: etl_kafka
@@ -55,6 +75,11 @@ services:
       - .env
     depends_on:
       - broker-1
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   zookeeper:
     image: zookeeper:3.5
@@ -64,6 +89,11 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
     volumes:
       - zookeeper_data:/var/lib/zookeeper/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   clickhouse-node1:
     image: yandex/clickhouse-server:21.3
@@ -74,6 +104,11 @@ services:
       - clickhouse_1_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   clickhouse-node2:
     image: yandex/clickhouse-server:21.3
@@ -84,6 +119,11 @@ services:
       - clickhouse_2_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   clickhouse-node3:
     image: yandex/clickhouse-server:21.3
@@ -94,6 +134,11 @@ services:
       - clickhouse_3_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   clickhouse-node4:
     image: yandex/clickhouse-server:21.3
@@ -104,10 +149,20 @@ services:
       - clickhouse_4_data:/var/lib/clickhouse/
     depends_on:
       - zookeeper
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   jaeger_agent:
     image: jaegertracing/all-in-one:1.41
     container_name: jaeger
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   ugc_service:
     restart: "always"
@@ -119,6 +174,11 @@ services:
         - broker-1
         - broker-2
         - broker-3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   nginx:
     image: nginx:1.23.3-alpine
@@ -129,6 +189,11 @@ services:
       - "8002:80"
     depends_on:
       - logstash
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   filebeat:
     user: root
@@ -140,6 +205,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - logstash
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   logstash:
     image: logstash:8.6.1
@@ -154,6 +224,11 @@ services:
       - .env
     depends_on:
       - elasticsearch
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   elasticsearch:
     image: elasticsearch:8.6.1
@@ -165,6 +240,11 @@ services:
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
     volumes:
       - elk_elasticsearch_data:/usr/share/elasticsearch/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
   kibana:
     image: kibana:8.6.1
@@ -172,6 +252,11 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
 
 volumes:
   zookeeper_1_data:
