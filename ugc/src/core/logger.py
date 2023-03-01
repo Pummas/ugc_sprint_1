@@ -65,14 +65,16 @@ class MsecTimeJsonFormatter(JsonFormatter):
     """Добавляет в формат даты-времени параметр %F для миллисекунд."""
 
     def formatTime(self, record: logging.LogRecord, datefmt: Optional[AnyStr] = None):
-        if datefmt:
-            ct = self.converter(record.created)
-            if "%F" in datefmt:
-                msec = "%03d" % record.msecs
-                datefmt = datefmt.replace("%F", msec)
-            return time.strftime(datefmt, ct)
-        else:
+        if datefmt is None:
             return super().formatTime(record, datefmt=None)
+
+        if "%F" in datefmt:
+            msec = "%03d" % record.msecs
+            datefmt = datefmt.replace("%F", msec)
+
+        ct = self.converter(record.created)
+        return time.strftime(datefmt, ct)
+
 
 
 # you can easy enable log file
