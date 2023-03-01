@@ -41,7 +41,7 @@ async def delete_bookmark(film_id: str,
     return Bookmark(**result)
 
 
-@router.get("/{bookmark_id}", response_model=List[Bookmark])
+@router.get("/", response_model=List[Bookmark])
 async def get_bookmarks(
         db: AsyncIOMotorClient = Depends(get_session),
         token_payload: AccessTokenPayload = Depends(jwt_bearer),

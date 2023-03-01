@@ -1,10 +1,8 @@
-import uuid
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import ValidationError
-from pymongo.errors import ServerSelectionTimeoutError
 
 from core.auth_bearer import AccessTokenPayload, jwt_bearer
 from db.user_info_db.database import get_session
