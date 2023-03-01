@@ -11,7 +11,7 @@ from models.user_info import Bookmark
 router = APIRouter()
 
 
-@router.post("/")
+@router.post("/{film_id}")
 async def create_bookmark(film_id,
                           db: AsyncIOMotorClient = Depends(get_session),
                           token_payload: AccessTokenPayload = Depends(jwt_bearer),
@@ -28,7 +28,7 @@ async def create_bookmark(film_id,
         return {"success": False, "error": str(e)}
 
 
-@router.delete("/film_id}")
+@router.delete("/{film_id}")
 async def delete_bookmark(film_id: str,
                           db: AsyncIOMotorClient = Depends(get_session),
                           token_payload: AccessTokenPayload = Depends(jwt_bearer),
