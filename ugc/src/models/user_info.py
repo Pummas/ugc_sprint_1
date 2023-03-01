@@ -1,23 +1,22 @@
 import uuid
+from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
+
+from core.core_model import CoreModel
 
 
-class BaseUserInfo(BaseModel):
+class BaseUserInfo(CoreModel):
     _id: str = Field(default_factory=lambda: str(uuid.uuid4()), alias='_id')
     film_id: str
     user_id: str
 
-    def __init__(self, **data):
-        if not data.get('_id'):
-            data['_id'] = str(uuid.uuid4())
-        super().__init__(**data)
-
 
 class Like(BaseUserInfo):
+    rating: int
+
     class Config:
-        allow_population_by_field_name = True
         json_encoders = {UUID: str}
         orm_mode = True
         schema_extra = {
@@ -28,12 +27,18 @@ class Like(BaseUserInfo):
             }
         }
 
+    @validator('rating')
+    def name_must_contain_space(cls, rating):
+        if rating not in [0, 10]:
+            raise ValueError('value is not valid')
+        return rating
+
 
 class Review(BaseUserInfo):
     text: str
+    published_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Config:
-        allow_population_by_field_name = True
         orm_mode = True
         json_encoders = {UUID: str}
         schema_extra = {
@@ -48,7 +53,6 @@ class Review(BaseUserInfo):
 
 class Bookmark(BaseUserInfo):
     class Config:
-        allow_population_by_field_name = True
         json_encoders = {UUID: str}
         orm_mode = True
         schema_extra = {
@@ -58,4 +62,3 @@ class Bookmark(BaseUserInfo):
                 "user_id": "fba9e098-57c8-4741-84c7-84f162b133ca"
             }
         }
-

@@ -21,6 +21,7 @@ class Settings(BaseSettings):
 
     MONGO_URL: str = Field("mongodb://user_name:user_password@localhost:27017/prod-db?authSource=admin",
                            env="UGC_MONGO_URL")
+    MONGO_DB: str = Field("prod-db", ENV="MONGO_DB")
 
 
 settings = Settings(_env_file=ENV_FILE)
