@@ -76,7 +76,6 @@ class MsecTimeJsonFormatter(JsonFormatter):
         return time.strftime(datefmt, ct)
 
 
-
 # you can easy enable log file
 LOG_FILE = "/dev/null"
 
