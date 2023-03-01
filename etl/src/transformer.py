@@ -2,6 +2,7 @@ import logging
 from abc import abstractmethod
 from typing import Any, Iterator, List
 
+import sentry_sdk
 from pydantic import ValidationError
 
 from model import ViewedFilm
@@ -21,7 +22,8 @@ class KafkaTransformer(Transformer):
         for record in data:
             try:
                 result.append(ViewedFilm.parse_raw(record))
-            except ValidationError:
+            except ValidationError as err:
                 logger.error("Error on creating model ViewedFilm from message %s", record)
+                sentry_sdk.capture_exception(err)
 
         return result

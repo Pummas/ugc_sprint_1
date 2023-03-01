@@ -19,5 +19,9 @@ class Settings(BaseSettings):
 
     KAFKA_INSTANCE: str = Field("localhost:39092", env="UGC_KAFKA_INSTANCE")
 
+    ENABLE_SENTRY: bool = Field(False, env="ENABLE_SENTRY")
+    SENTRY_DSN: str = Field("<sentry dsn>", env="SENTRY_DSN")
+    RELEASE_VERSION: str = Field("ugc-service@1.0.0", env="RELEASE_VERSION")
+
 
 settings = Settings(_env_file=ENV_FILE)

@@ -3,6 +3,7 @@ from http import HTTPStatus
 from typing import Optional
 
 import backoff
+import sentry_sdk
 from aiokafka import AIOKafkaProducer
 from aiokafka.errors import KafkaError, KafkaTimeoutError
 from fastapi import HTTPException
@@ -18,10 +19,12 @@ async def write_event(topic: str, key: str, value: str):
 
     except KafkaTimeoutError as err:
         logging.error("kafka timeout error: %s", err)
+        sentry_sdk.capture_exception(err)
         raise HTTPException(status_code=HTTPStatus.REQUEST_TIMEOUT, detail="timeout error (Kafka)")
 
     except KafkaError as err:
         logging.error("some kafka error: %s", err)
+        sentry_sdk.capture_exception(err)
         raise HTTPException(status_code=HTTPStatus.CONFLICT, detail="Error due saving event (Kafka)")
 
     logging.debug("save topic:%s key:%s  value:%s response:%s", topic, key, value, response)

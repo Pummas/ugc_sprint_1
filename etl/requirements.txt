@@ -3,3 +3,4 @@ confluent-kafka==2.0.2
 pydantic==1.10.4
 clickhouse-driver==0.2.5
 orjson==3.8.5
+sentry-sdk==1.15.0

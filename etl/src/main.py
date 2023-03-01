@@ -9,10 +9,14 @@ from etl import ETL
 from extractor import KafkaBroker
 from loader import Clickhouse
 from pre_start import create_kafka_topics, init_db
+from sentry import init_sentry
 from storage import KafkaStorage
 from transformer import KafkaTransformer
 
 logger = logging.getLogger(__name__)
+
+
+init_sentry()
 
 if __name__ == "__main__":
     create_kafka_topics(settings.TOPIC_NAMES)
