@@ -1,0 +1,32 @@
+version: '3.0'
+name: db_test
+services:
+  mongo_db:
+      container_name: mongo_db
+      image: mongo
+      command: mongod --dbpath /data/db --port 27017
+      ports:
+        - "27017:27017"
+      expose:
+        - "27017"
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+
+  mongo-gui:
+    container_name: "mongo-gui"
+    image: ugleiton/mongo-gui
+    restart: always
+    ports:
+      - "4321:4321"
+    environment:
+      - MONGO_URL=mongodb://mongo_db:27017
+
+  postgres_db:
+    image: postgres:15.1-alpine
+    container_name: postgres_db
+    ports:
+        - "5432:5432"
+    environment:
+        - POSTGRES_USER=app
+        - POSTGRES_PASSWORD=123qwe
+        - POSTGRES_DB=test_db
