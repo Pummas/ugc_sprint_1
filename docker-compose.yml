@@ -1,3 +1,4 @@
+version: '3.7'
 services:
   zookeeper-1:
     image: confluentinc/cp-zookeeper:7.3.0
@@ -258,6 +259,17 @@ services:
         max-size: 10m
         max-file: 3
 
+  mongodb_container:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_DATABASE: prod-db
+      MONGO_INITDB_ROOT_USERNAME: user_name
+      MONGO_INITDB_ROOT_PASSWORD: user_password
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
 volumes:
   zookeeper_1_data:
   broker_1_data:
@@ -270,3 +282,4 @@ volumes:
   clickhouse_4_data:
   elk_logstash_data:
   elk_elasticsearch_data:
+  mongodb_data_container:
