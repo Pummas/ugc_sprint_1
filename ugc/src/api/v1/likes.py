@@ -22,11 +22,11 @@ async def add_like(film_id: str, rating: int,
                    ):
     user_id = str(token_payload.sub)
     if await db["likes"].find_one({"film_id": film_id, "user_id": user_id}):
-        raise HTTPException(status_code=400, detail=f"Like already exist")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Like already exist")
     try:
         model = dict(Like(film_id=film_id, user_id=user_id, rating=rating))
     except ValidationError:
-        raise HTTPException(status_code=400, detail=f"Error validation")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Error validation")
     await db["likes"].insert_one(model)
     return "created"
 
@@ -83,7 +83,7 @@ async def get_average_rating(film_id: str,
     if result:
         return result
 
-    raise HTTPException(status_code=400, detail=f"Not result")
+    raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Not result")
 
 
 @router.put("/{film_id}",
@@ -97,7 +97,7 @@ async def update_like(film_id: str, rating: int,
                       ):
     user_id = str(token_payload.sub)
     if rating not in [0, 10]:
-        raise HTTPException(status_code=400, detail="Рейтинг должен быть 0 или 10")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Рейтинг должен быть 0 или 10")
 
     collection = db['likes']
 
@@ -106,4 +106,4 @@ async def update_like(film_id: str, rating: int,
     if result.modified_count > 0:
         return {"message": "Лайк успешно обновлен"}
 
-    raise HTTPException(status_code=404, detail="Лайк не найден")
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Лайк не найден")

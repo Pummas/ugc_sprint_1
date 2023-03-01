@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -18,10 +19,9 @@ async def create_review(film_id: str, text: str,
     user_id = str(token_payload.sub)
     collection = db['reviews']
     if await collection.find_one({"film_id": film_id, "user_id": user_id}):
-        raise HTTPException(status_code=400, detail=f"Review already exist")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Review already exist")
     review = Review(film_id=film_id, user_id=user_id, text=text)
-    result = await collection.insert_one(review.dict())
-    review.id = str(result.inserted_id)
+    await collection.insert_one(review.dict())
     return review
 
 

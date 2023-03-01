@@ -8,7 +8,7 @@ from core.core_model import CoreModel
 
 
 class BaseUserInfo(CoreModel):
-    _id: str = Field(default_factory=lambda: str(uuid.uuid4()), alias='_id')
+    # _id: str = Field(default_factory=lambda: str(uuid.uuid4()), alias='_id')
     film_id: str
     user_id: str
 

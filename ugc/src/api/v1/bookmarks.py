@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -10,7 +11,7 @@ from models.user_info import Bookmark
 router = APIRouter()
 
 
-@router.post("/", response_model=Bookmark)
+@router.post("/")
 async def create_bookmark(film_id,
                           db: AsyncIOMotorClient = Depends(get_session),
                           token_payload: AccessTokenPayload = Depends(jwt_bearer),
@@ -18,7 +19,7 @@ async def create_bookmark(film_id,
     collection = db["bookmarks"]
     user_id = str(token_payload.sub)
     if await collection.find_one({"film_id": film_id, "user_id": user_id}):
-        raise HTTPException(status_code=400, detail=f"Bookmark already exist")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Bookmark already exist")
     bookmark = Bookmark(film_id=film_id, user_id=user_id)
     try:
         result = await collection.insert_one(bookmark.dict())
@@ -27,7 +28,7 @@ async def create_bookmark(film_id,
         return {"success": False, "error": str(e)}
 
 
-@router.delete("/{bookmark_id}", response_model=Bookmark)
+@router.delete("/film_id}")
 async def delete_bookmark(film_id: str,
                           db: AsyncIOMotorClient = Depends(get_session),
                           token_payload: AccessTokenPayload = Depends(jwt_bearer),
@@ -37,8 +38,8 @@ async def delete_bookmark(film_id: str,
 
     result = await collection.delete_one({"film_id": film_id, "user_id": user_id})
     if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Закладка не найдена")
-    return Bookmark(**result)
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Закладка не найдена")
+    return {"deleted": film_id}
 
 
 @router.get("/", response_model=List[Bookmark])
@@ -49,4 +50,4 @@ async def get_bookmarks(
     collection = db["bookmarks"]
     user_id = str(token_payload.sub)
     result = collection.find({"user_id": user_id})
-    return [Bookmark(**doc) for doc in result]
+    return [Bookmark(**doc) async for doc in result]
