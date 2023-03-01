@@ -31,8 +31,9 @@ RUN chmod +x /opt/entrypoint.sh
 WORKDIR /opt/app
 COPY ./src .
 
-ENTRYPOINT ["/opt/entrypoint.sh"]
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]
+# в uvicorn нельзя задать класс логгера, поэтому запускаем из python,
+# чтобы сконфигурировать логирование до запуска uvicorn.run
+CMD ["python3", "main.py"]
 
 # 'production' образ
 FROM python-base as production
@@ -51,5 +52,4 @@ RUN groupadd -r app && useradd -d /opt/app -r -g app app \
     && chown app:app -R /opt/app
 USER app
 
-ENTRYPOINT ["/opt/entrypoint.sh"]
-CMD ["gunicorn", "main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8001"]
+CMD ["gunicorn", "main:app", "-c", "gunicorn_config.py"]

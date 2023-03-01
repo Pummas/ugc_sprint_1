@@ -1,0 +1,12 @@
+- pipeline.id: distributor_beats
+  path.config: "/config/distributor_beats.conf"
+  pipeline.workers: 1
+- pipeline.id: ugc_service
+  path.config: "/config/ugc_service.conf"
+  pipeline.workers: 1
+- pipeline.id: nginx
+  path.config: "/config/nginx.conf"
+  pipeline.workers: 1
+- pipeline.id: fallback
+  path.config: "/config/fallback.conf"
+  pipeline.workers: 1
