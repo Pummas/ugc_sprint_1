@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     GROUP_ID: str = "etl_kafka"
     AUTO_OFFSET_RESET: str = "smallest"
 
+    ENABLE_SENTRY: bool = Field(False, env="ENABLE_SENTRY")
+    SENTRY_DSN: str = Field("<sentry dsn>", env="SENTRY_DSN")
+    RELEASE_VERSION: str = Field("ugc-service@1.0.0", env="RELEASE_VERSION")
+
 
 settings = Settings()
 
