@@ -11,7 +11,7 @@ from models.user_info import Review
 router = APIRouter()
 
 
-@router.post("/", response_model=Review)
+@router.post("/{film_id}", response_model=Review)
 async def create_review(
     film_id: str,
     text: str,

@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/",
+    "/{film_id}",
     summary="Add like to storage",
     openapi_extra={"x-request-id": "request ID"},
     status_code=HTTPStatus.CREATED,
@@ -35,7 +35,7 @@ async def add_like(
 
 
 @router.delete(
-    "/",
+    "/{film_id}",
     summary="Delete like",
     openapi_extra={"x-request-id": "request ID"},
     status_code=HTTPStatus.OK,
