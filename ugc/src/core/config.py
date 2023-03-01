@@ -19,8 +19,9 @@ class Settings(BaseSettings):
 
     KAFKA_INSTANCE: str = Field("localhost:39092", env="UGC_KAFKA_INSTANCE")
 
-    MONGO_URL: str = Field("mongodb://user_name:user_password@localhost:27017/prod-db?authSource=admin",
-                           env="UGC_MONGO_URL")
+    MONGO_URL: str = Field(
+        "mongodb://user_name:user_password@localhost:27017/prod-db?authSource=admin", env="UGC_MONGO_URL"
+    )
     MONGO_DB: str = Field("prod-db", ENV="MONGO_DB")
 
     ENABLE_SENTRY: bool = Field(False, env="ENABLE_SENTRY")

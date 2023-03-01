@@ -11,12 +11,14 @@ router = APIRouter()
 
 
 @router.post("/", response_model=Review)
-async def create_review(film_id: str, text: str,
-                        token_payload: AccessTokenPayload = Depends(jwt_bearer),
-                        db: AsyncIOMotorClient = Depends(get_session)
-                        ):
+async def create_review(
+    film_id: str,
+    text: str,
+    token_payload: AccessTokenPayload = Depends(jwt_bearer),
+    db: AsyncIOMotorClient = Depends(get_session),
+):
     user_id = str(token_payload.sub)
-    collection = db['reviews']
+    collection = db["reviews"]
     if await collection.find_one({"film_id": film_id, "user_id": user_id}):
         raise HTTPException(status_code=400, detail=f"Review already exist")
     review = Review(film_id=film_id, user_id=user_id, text=text)
@@ -27,14 +29,13 @@ async def create_review(film_id: str, text: str,
 
 @router.get("/", response_model=List[Review])
 async def get_reviews(
-        film_id: str = None,
-        user_id: str = None,
-        sort_by: str = "publication_date",
-        ascending: bool = False,
-        db: AsyncIOMotorClient = Depends(get_session)
-
+    film_id: str = None,
+    user_id: str = None,
+    sort_by: str = "publication_date",
+    ascending: bool = False,
+    db: AsyncIOMotorClient = Depends(get_session),
 ):
-    collection = db['reviews']
+    collection = db["reviews"]
     query = {}
     if film_id:
         query["film_id"] = film_id
