@@ -10,7 +10,8 @@ from core.logger import set_log_extra
 from core.sentry import init_sentry
 from core.tracer import init_tracer
 from db import kafka_producer
-from db.user_info_db.database import check_db_connection, client as mongo_client
+from db.user_info_db.database import check_db_connection
+from db.user_info_db.database import client as mongo_client
 
 init_sentry()
 
