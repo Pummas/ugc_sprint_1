@@ -18,10 +18,10 @@ router = APIRouter()
     status_code=HTTPStatus.CREATED,
 )
 async def add_like(
-        film_id: str,
-        rating: int,
-        token_payload: AccessTokenPayload = Depends(jwt_bearer),
-        db: AsyncIOMotorClient = Depends(get_session),
+    film_id: str,
+    rating: int,
+    token_payload: AccessTokenPayload = Depends(jwt_bearer),
+    db: AsyncIOMotorClient = Depends(get_session),
 ):
     user_id = str(token_payload.sub)
     if await db["likes"].find_one({"film_id": film_id, "user_id": user_id}):
@@ -46,8 +46,7 @@ async def add_like(
     status_code=HTTPStatus.OK,
 )
 async def delete_like(
-        film_id: str, token_payload: AccessTokenPayload = Depends(jwt_bearer),
-        db: AsyncIOMotorClient = Depends(get_session)
+    film_id: str, token_payload: AccessTokenPayload = Depends(jwt_bearer), db: AsyncIOMotorClient = Depends(get_session)
 ):
     user_id = str(token_payload.sub)
     collection = db["likes"]
@@ -113,10 +112,10 @@ async def get_average_rating(film_id: str, db: AsyncIOMotorClient = Depends(get_
     status_code=HTTPStatus.OK,
 )
 async def update_like(
-        film_id: str,
-        rating: int,
-        token_payload: AccessTokenPayload = Depends(jwt_bearer),
-        db: AsyncIOMotorClient = Depends(get_session),
+    film_id: str,
+    rating: int,
+    token_payload: AccessTokenPayload = Depends(jwt_bearer),
+    db: AsyncIOMotorClient = Depends(get_session),
 ):
     user_id = str(token_payload.sub)
     if rating not in [0, 10]:
@@ -125,10 +124,7 @@ async def update_like(
     collection = db["likes"]
 
     try:
-        result = await collection.update_one(
-            {"film_id": film_id, "user_id": user_id},
-            {"$set": {"rating": rating}}
-        )
+        result = await collection.update_one({"film_id": film_id, "user_id": user_id}, {"$set": {"rating": rating}})
     except Exception:
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Update error")
 
