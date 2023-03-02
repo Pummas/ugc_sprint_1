@@ -11,99 +11,124 @@ from models.user_info import Like
 router = APIRouter()
 
 
-@router.post("/",
-             summary="Add like to storage",
-             openapi_extra={"x-request-id": "request ID"},
-             status_code=HTTPStatus.CREATED,
-             )
-async def add_like(film_id: str, rating: int,
-                   token_payload: AccessTokenPayload = Depends(jwt_bearer),
-                   db: AsyncIOMotorClient = Depends(get_session)
-                   ):
+@router.post(
+    "/{film_id}",
+    summary="Add like to storage",
+    openapi_extra={"x-request-id": "request ID"},
+    status_code=HTTPStatus.CREATED,
+)
+async def add_like(
+    film_id: str,
+    rating: int,
+    token_payload: AccessTokenPayload = Depends(jwt_bearer),
+    db: AsyncIOMotorClient = Depends(get_session),
+):
     user_id = str(token_payload.sub)
     if await db["likes"].find_one({"film_id": film_id, "user_id": user_id}):
-        raise HTTPException(status_code=400, detail=f"Like already exist")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Like already exist")
     try:
         model = dict(Like(film_id=film_id, user_id=user_id, rating=rating))
     except ValidationError:
-        raise HTTPException(status_code=400, detail=f"Error validation")
-    await db["likes"].insert_one(model)
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Error validation")
+
+    try:
+        await db["likes"].insert_one(model)
+    except Exception:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Insert error")
+
     return "created"
 
 
-@router.delete("/",
-               summary="Delete like",
-               openapi_extra={"x-request-id": "request ID"},
-               status_code=HTTPStatus.OK, )
-async def delete_like(film_id: str,
-                      token_payload: AccessTokenPayload = Depends(jwt_bearer),
-                      db: AsyncIOMotorClient = Depends(get_session)
-                      ):
+@router.delete(
+    "/{film_id}",
+    summary="Delete like",
+    openapi_extra={"x-request-id": "request ID"},
+    status_code=HTTPStatus.OK,
+)
+async def delete_like(
+    film_id: str, token_payload: AccessTokenPayload = Depends(jwt_bearer), db: AsyncIOMotorClient = Depends(get_session)
+):
     user_id = str(token_payload.sub)
-    collection = db['likes']
+    collection = db["likes"]
 
-    result = await collection.delete_one({"film_id": film_id, "user_id": user_id})
+    try:
+        result = await collection.delete_one({"film_id": film_id, "user_id": user_id})
+    except Exception:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Delete error")
 
     if result.deleted_count > 0:
         return {"message": "Лайк успешно удален"}
 
-    raise HTTPException(status_code=404, detail="Лайк не найден")
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Лайк не найден")
 
 
-@router.get("/{film_id}",
-            summary="get likes and dislikes from film_id",
-            openapi_extra={"x-request-id": "request ID"},
-            status_code=HTTPStatus.OK,
-            )
-async def get_rating(film_id: str,
-                     db: AsyncIOMotorClient = Depends(get_session)
-                     ):
+@router.get(
+    "/{film_id}",
+    summary="get likes and dislikes from film_id",
+    openapi_extra={"x-request-id": "request ID"},
+    status_code=HTTPStatus.OK,
+)
+async def get_rating(film_id: str, db: AsyncIOMotorClient = Depends(get_session)):
     collection = db["likes"]
-    likes = await collection.count_documents({"film_id": film_id, "rating": 0})
-    dislikes = await collection.count_documents({"film_id": film_id, "rating": 10})
+
+    try:
+        dislikes = await collection.count_documents({"film_id": film_id, "rating": 0})
+        likes = await collection.count_documents({"film_id": film_id, "rating": 10})
+    except Exception:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Find error")
+
     return likes, dislikes
 
 
-@router.get("/average_rating/{film_id}",
-            summary="get average rating from film_id",
-            openapi_extra={"x-request-id": "request ID"},
-            status_code=HTTPStatus.OK,
-            )
-async def get_average_rating(film_id: str,
-                             db: AsyncIOMotorClient = Depends(get_session)
-                             ):
+@router.get(
+    "/average_rating/{film_id}",
+    summary="get average rating from film_id",
+    openapi_extra={"x-request-id": "request ID"},
+    status_code=HTTPStatus.OK,
+)
+async def get_average_rating(film_id: str, db: AsyncIOMotorClient = Depends(get_session)):
     collection = db["likes"]
     pipeline = [
         {"$match": {"film_id": film_id}},
-        {"$group": {"_id": "$film_id", "average_rating": {"$avg": "$rating"}}}
+        {"$group": {"_id": "$film_id", "average_rating": {"$avg": "$rating"}}},
     ]
-    cursor = collection.aggregate(pipeline)
 
-    result = await cursor.to_list(length=1)
+    try:
+        cursor = collection.aggregate(pipeline)
+        result = await cursor.to_list(length=1)
+    except Exception:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Find error")
+
     if result:
         return result
 
-    raise HTTPException(status_code=400, detail=f"Not result")
+    raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Not result")
 
 
-@router.put("/{film_id}",
-            summary="update rating from film_id",
-            openapi_extra={"x-request-id": "request ID"},
-            status_code=HTTPStatus.OK,
-            )
-async def update_like(film_id: str, rating: int,
-                      token_payload: AccessTokenPayload = Depends(jwt_bearer),
-                      db: AsyncIOMotorClient = Depends(get_session)
-                      ):
+@router.put(
+    "/{film_id}",
+    summary="update rating from film_id",
+    openapi_extra={"x-request-id": "request ID"},
+    status_code=HTTPStatus.OK,
+)
+async def update_like(
+    film_id: str,
+    rating: int,
+    token_payload: AccessTokenPayload = Depends(jwt_bearer),
+    db: AsyncIOMotorClient = Depends(get_session),
+):
     user_id = str(token_payload.sub)
     if rating not in [0, 10]:
-        raise HTTPException(status_code=400, detail="Рейтинг должен быть 0 или 10")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Рейтинг должен быть 0 или 10")
 
-    collection = db['likes']
+    collection = db["likes"]
 
-    result = await collection.update_one({"film_id": film_id, "user_id": user_id}, {"$set": {"rating": rating}})
+    try:
+        result = await collection.update_one({"film_id": film_id, "user_id": user_id}, {"$set": {"rating": rating}})
+    except Exception:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Update error")
 
     if result.modified_count > 0:
         return {"message": "Лайк успешно обновлен"}
 
-    raise HTTPException(status_code=404, detail="Лайк не найден")
+    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Лайк не найден")
