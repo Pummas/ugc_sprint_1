@@ -24,8 +24,8 @@ async def create_bookmark(film_id,
     try:
         result = await collection.insert_one(bookmark.dict())
         return {"success": True, "id": str(result.inserted_id)}
-    except Exception as e:
-        return {"success": False, "error": str(e)}
+    except Exception:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Insert error")
 
 
 @router.delete("/{film_id}")
@@ -36,7 +36,11 @@ async def delete_bookmark(film_id: str,
     collection = db["bookmarks"]
     user_id = str(token_payload.sub)
 
-    result = await collection.delete_one({"film_id": film_id, "user_id": user_id})
+    try:
+        result = await collection.delete_one({"film_id": film_id, "user_id": user_id})
+    except Exception:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="Delete error")
+
     if result.deleted_count == 0:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Закладка не найдена")
     return {"deleted": film_id}
@@ -49,5 +53,8 @@ async def get_bookmarks(
 ):
     collection = db["bookmarks"]
     user_id = str(token_payload.sub)
-    result = collection.find({"user_id": user_id})
+    try:
+        result = collection.find({"user_id": user_id})
+    except Exception:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="find error")
     return [Bookmark(**doc) async for doc in result]

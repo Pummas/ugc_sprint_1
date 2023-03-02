@@ -10,7 +10,7 @@ from core.logger import set_log_extra
 from core.sentry import init_sentry
 from core.tracer import init_tracer
 from db import kafka_producer
-from db.user_info_db.database import check_db_connection
+from db.user_info_db.database import check_db_connection, client as mongo_client
 
 init_sentry()
 
@@ -41,6 +41,7 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     logging.debug("app shutdown")
+    mongo_client.close()
     await kafka_producer.close_kafka()
 
 
