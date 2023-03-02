@@ -13,10 +13,10 @@ router = APIRouter()
 
 @router.post("/{film_id}", response_model=Review)
 async def create_review(
-        film_id: str,
-        text: str,
-        token_payload: AccessTokenPayload = Depends(jwt_bearer),
-        db: AsyncIOMotorClient = Depends(get_session),
+    film_id: str,
+    text: str,
+    token_payload: AccessTokenPayload = Depends(jwt_bearer),
+    db: AsyncIOMotorClient = Depends(get_session),
 ):
     user_id = str(token_payload.sub)
     collection = db["reviews"]
@@ -34,11 +34,11 @@ async def create_review(
 
 @router.get("/", response_model=List[Review])
 async def get_reviews(
-        film_id: str = None,
-        user_id: str = None,
-        sort_by: str = "publication_date",
-        ascending: bool = False,
-        db: AsyncIOMotorClient = Depends(get_session),
+    film_id: str = None,
+    user_id: str = None,
+    sort_by: str = "publication_date",
+    ascending: bool = False,
+    db: AsyncIOMotorClient = Depends(get_session),
 ):
     collection = db["reviews"]
     query = {}

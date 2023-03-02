@@ -12,10 +12,11 @@ router = APIRouter()
 
 
 @router.post("/{film_id}")
-async def create_bookmark(film_id,
-                          db: AsyncIOMotorClient = Depends(get_session),
-                          token_payload: AccessTokenPayload = Depends(jwt_bearer),
-                          ):
+async def create_bookmark(
+    film_id,
+    db: AsyncIOMotorClient = Depends(get_session),
+    token_payload: AccessTokenPayload = Depends(jwt_bearer),
+):
     collection = db["bookmarks"]
     user_id = str(token_payload.sub)
     if await collection.find_one({"film_id": film_id, "user_id": user_id}):
@@ -29,10 +30,11 @@ async def create_bookmark(film_id,
 
 
 @router.delete("/{film_id}")
-async def delete_bookmark(film_id: str,
-                          db: AsyncIOMotorClient = Depends(get_session),
-                          token_payload: AccessTokenPayload = Depends(jwt_bearer),
-                          ):
+async def delete_bookmark(
+    film_id: str,
+    db: AsyncIOMotorClient = Depends(get_session),
+    token_payload: AccessTokenPayload = Depends(jwt_bearer),
+):
     collection = db["bookmarks"]
     user_id = str(token_payload.sub)
 
@@ -48,8 +50,8 @@ async def delete_bookmark(film_id: str,
 
 @router.get("/", response_model=List[Bookmark])
 async def get_bookmarks(
-        db: AsyncIOMotorClient = Depends(get_session),
-        token_payload: AccessTokenPayload = Depends(jwt_bearer),
+    db: AsyncIOMotorClient = Depends(get_session),
+    token_payload: AccessTokenPayload = Depends(jwt_bearer),
 ):
     collection = db["bookmarks"]
     user_id = str(token_payload.sub)

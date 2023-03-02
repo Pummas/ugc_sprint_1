@@ -84,7 +84,7 @@ class MongoDB(BaseDb):
         self.db["movie"].update_one({"_id": movie.movie_id}, {"$set": {"name": movie.name}}, upsert=True)
 
     def get_user_bookmarks(self, user_id: UUID) -> list[UUID]:
-        if query := self.db["person"].find_one({"_id": user_id}, {"bookmarks": 1, "_id": 0}): # noqa E999
+        if query := self.db["person"].find_one({"_id": user_id}, {"bookmarks": 1, "_id": 0}):  # noqa E999
             return query.get("bookmarks", [])
         else:
             return []
@@ -99,7 +99,7 @@ class MongoDB(BaseDb):
         result = self.db["movie"].aggregate(
             [{"$match": {"_id": movie_id}}, {"$project": {"_id": 0, "avg_score": {"$avg": "$likes.score"}}}]
         )
-        if scores := list(result): # noqa E999
+        if scores := list(result):  # noqa E999
             return scores[0].get("avg_score", None)
         else:
             return None
